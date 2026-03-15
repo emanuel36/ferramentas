@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Financiamento">
+<meta name="theme-color" content="#2563eb">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Simulador de Financiamento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#f5f7fa;--card:#fff;--primary:#2563eb;--primary-h:#1d4ed8;--text:#1e293b;--text2:#64748b;--border:#e2e8f0;--green:#10b981;--red:#ef4444;--radius:16px;--shadow:0 1px 4px rgba(0,0,0,.06),0 4px 12px rgba(0,0,0,.04)}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:880px;margin:0 auto;padding:16px}
+header{text-align:center;padding:20px 0 14px}
+header h1{font-family:'DM Serif Display',serif;font-size:1.9rem;font-weight:400;letter-spacing:-.01em}
+header p{color:var(--text2);margin-top:4px;font-size:.875rem}
+.card{background:var(--card);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow);margin-bottom:14px}
+.card h2{font-size:1rem;font-weight:700;margin-bottom:12px;border-bottom:2px solid var(--primary);padding-bottom:7px;display:inline-block}
+.form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+label{display:block;font-size:.72rem;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.6px}
+input,select{width:100%;padding:7px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-family:'DM Sans',sans-serif;transition:border .2s,box-shadow .2s;background:#fff;color:var(--text)}
+input:focus,select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(37,99,235,.12)}
+.btn{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;padding:9px 26px;border-radius:8px;font-size:.9rem;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:opacity .2s,box-shadow .2s;width:100%;margin-top:6px;box-shadow:0 4px 12px rgba(37,99,235,.3)}
+.btn:hover{opacity:.92;box-shadow:0 6px 16px rgba(37,99,235,.38)}
+.divider{border-top:1px solid var(--border);padding-top:12px;margin-top:4px;margin-bottom:4px}
+.divider-title{display:flex;align-items:center;gap:10px;margin-bottom:12px;margin-top:2px}
+.divider-title::before,.divider-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.divider-title span{font-size:.68rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.7px;white-space:nowrap}
+.action-bar{display:flex;gap:10px;align-items:end;margin-top:4px;flex-wrap:wrap}
+.action-bar .btn{width:auto;margin-top:0;padding:8px 22px}
+.action-bar>div{flex:1;min-width:120px;max-width:220px}
+.summary-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px}
+.summary-card{background:var(--card);border-radius:10px;padding:12px 10px;text-align:center;border:1px solid var(--border);transition:transform .2s,box-shadow .2s}
+.summary-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.summary-card .label{font-size:.65rem;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:2px}
+.summary-card .value{font-size:1rem;font-weight:700;margin-top:1px;line-height:1.2}
+.summary-card .sub{font-size:.6rem;color:var(--text2);margin-top:2px;line-height:1.2}
+.summary-card.blue .value{color:var(--primary)}
+.summary-card.green .value{color:var(--green)}
+.summary-card.red .value{color:var(--red)}
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.charts-grid.single{grid-template-columns:1fr}
+.chart-wrap{background:var(--card);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);min-width:0}
+.chart-wrap.full{grid-column:1/-1}
+.chart-wrap h3{font-size:.85rem;font-weight:600;margin-bottom:10px}
+canvas{width:100%!important;max-height:260px}
+.tabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.tab{padding:6px 13px;border-radius:7px;font-size:.8rem;font-weight:500;cursor:pointer;border:1.5px solid var(--border);background:#fff;color:var(--text2);transition:all .2s;font-family:'DM Sans',sans-serif}
+.tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+th{background:var(--bg);padding:6px 8px;text-align:right;font-weight:600;color:var(--text2);position:sticky;top:0}
+td{padding:5px 8px;text-align:right;border-bottom:1px solid var(--border)}
+th:first-child,td:first-child{text-align:center}
+.table-scroll{max-height:400px;overflow-y:auto;border-radius:8px;border:1px solid var(--border)}
+#results{display:none}
+.main-tabs{display:flex;gap:0;margin-bottom:16px;border-bottom:2px solid var(--border)}
+.main-tab{padding:9px 20px;font-size:.9rem;font-weight:600;cursor:pointer;border:none;background:none;color:var(--text2);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;font-family:'DM Sans',sans-serif}
+.main-tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+.main-tab:hover{color:var(--primary)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.invest-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.invest-stat{background:var(--card);border-radius:10px;padding:12px;border:1px solid var(--border);text-align:center}
+.invest-stat .label{font-size:.7rem;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:4px}
+.invest-stat .value{font-size:1.1rem;font-weight:700}
+.invest-stat .sub{font-size:.65rem;color:var(--text2);margin-top:2px}
+.timeline-table{width:100%;border-collapse:collapse;font-size:.8rem;margin-top:8px}
+.timeline-table th{background:var(--bg);padding:6px 8px;text-align:right;font-weight:600;color:var(--text2);position:sticky;top:0}
+.timeline-table td{padding:5px 8px;text-align:right;border-bottom:1px solid var(--border)}
+.timeline-table th:first-child,.timeline-table td:first-child{text-align:center}
+.timeline-table tr.positive{background:#f0fdf4}
+.timeline-table tr.negative{background:#fef2f2}
+.timeline-table tr.breakeven{background:#fef3c7;font-weight:600}
+.phase-indicator{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px}
+.phase-loss{background:var(--red)}
+.phase-profit{background:var(--green)}
+.comp-forms{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.comp-form-card{background:var(--card);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);border-top:4px solid var(--primary)}
+.comp-form-card.imovel2{border-top-color:var(--green)}
+.comp-form-card h3{font-size:.95rem;font-weight:700;margin-bottom:12px}
+.comp-table-diff{font-weight:600}
+.comp-table-diff.pos{color:var(--green)}
+.comp-table-diff.neg{color:var(--red)}
+.comp-table th.im1{color:var(--primary)}
+.comp-table th.im2{color:var(--green)}
+.comp-legend{display:flex;gap:16px;align-items:center;font-size:.8rem;margin-bottom:10px;flex-wrap:wrap}
+.comp-legend-dot{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:4px}
+@media(max-width:768px){.charts-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr 1fr}.summary-grid{grid-template-columns:repeat(3,1fr)}.invest-stats{grid-template-columns:1fr}.comp-forms{grid-template-columns:1fr}}
+@media(max-width:480px){.form-grid{grid-template-columns:1fr}.summary-grid{grid-template-columns:repeat(2,1fr)}.action-bar{flex-direction:column}.action-bar>div{max-width:none}}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>Simulador de Financiamento</h1>
+<p>Compare sistemas de amortizacao e planeje seu financiamento</p>
+</header>
+
+<div class="main-tabs">
+<button class="main-tab active" onclick="App.switchMainTab('simulador',this)">Simulador</button>
+<button class="main-tab" onclick="App.switchMainTab('investimento',this)">Investimento (Aluguel)</button>
+<button class="main-tab" onclick="App.switchMainTab('comparacao',this)">Comparar Imoveis</button>
+</div>
+
+<!-- Aba Simulador -->
+<div id="tabSimulador" class="tab-content active">
+  <div class="card">
+    <h2>Dados do Financiamento</h2>
+    <div class="form-grid">
+      <div><label>Valor Imovel (R$)</label><input type="text" id="valorImovel" value="439.990,00"></div>
+      <div><label>Entrada (%)</label><input type="text" id="entradaPct" value="40,00"><input type="hidden" id="entrada" value="179.996,00"></div>
+      <div><label>Taxa Juros Anual (%)</label><input type="text" id="taxaJuros" value="9,01"></div>
+      <div><label>Prazo (anos)</label><input type="number" id="prazoAnos" value="35" min="1" max="35"></div>
+    </div>
+    <div class="divider">
+      <div class="divider-title"><span>Amortizacao Extraordinaria</span></div>
+      <div class="form-grid">
+        <div><label>Valor Extra (R$)</label><input type="text" id="extraValor" value="24.000,00"></div>
+        <div><label>A cada (meses)</label><input type="number" id="extraFreq" value="24" min="1" max="420"></div>
+        <div><label>A partir do mes</label><input type="number" id="extraInicio" value="24" min="1"></div>
+        <div><label>Reajuste Anual (%)</label><input type="text" id="aumentoAnual" value="4,00"></div>
+      </div>
+    </div>
+    <div class="action-bar">
+      <div><label>Sistema</label><select id="sistema"><option value="sac" selected>SAC</option><option value="price">Tabela Price</option><option value="ambos">SAC x Price</option></select></div>
+      <div><label>Amort. Extra</label><select id="usarExtra"><option value="sim" selected>Sim</option><option value="nao">Nao</option></select></div>
+      <button class="btn" onclick="App.simular()">Simular</button>
+    </div>
+  </div>
+  <div id="results">
+    <div class="summary-grid" id="summaryGrid"></div>
+    <div id="compareSection"></div>
+    <div class="charts-grid" id="chartsArea"></div>
+    <div class="card">
+      <h2>Tabela de Amortizacao</h2>
+      <div class="tabs" id="tableTabs"></div>
+      <div class="table-scroll" id="tableArea"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Aba Investimento -->
+<div id="tabInvestimento" class="tab-content">
+  <div class="card">
+    <h2>Dados do Financiamento</h2>
+    <div class="form-grid">
+      <div><label>Valor Imovel (R$)</label><input type="text" id="invValorImovel" value="439.990,00"></div>
+      <div><label>Entrada (%)</label><input type="text" id="invEntradaPct" value="40,00"></div>
+      <div><label>Taxa Juros Anual (%)</label><input type="text" id="invTaxaJuros" value="9,01"></div>
+      <div><label>Prazo (anos)</label><input type="number" id="invPrazoAnos" value="35" min="1" max="35"></div>
+    </div>
+    <div class="divider">
+      <div class="divider-title"><span>Amortizacao Extraordinaria</span></div>
+      <div class="form-grid">
+        <div><label>Valor Extra (R$)</label><input type="text" id="invExtraValor" value="24.000,00"></div>
+        <div><label>A cada (meses)</label><input type="number" id="invExtraFreq" value="24" min="1" max="420"></div>
+        <div><label>A partir do mes</label><input type="number" id="invExtraInicio" value="24" min="1"></div>
+        <div><label>Reajuste Anual (%)</label><input type="text" id="invAumentoAnual" value="4,00"></div>
+      </div>
+    </div>
+    <div class="divider">
+      <div class="divider-title"><span>Dados do Aluguel</span></div>
+      <div class="form-grid" style="grid-template-columns:1fr 1fr">
+        <div><label>Aluguel Atual (R$)</label><input type="text" id="aluguelValor" value="2.000,00"></div>
+        <div><label>Reajuste Aluguel (%)</label><input type="text" id="aluguelReajuste" value="5,00"></div>
+      </div>
+    </div>
+    <div class="action-bar">
+      <div><label>Sistema</label><select id="investSistema"><option value="sac">SAC</option><option value="price">Tabela Price</option></select></div>
+      <div><label>Amort. Extra</label><select id="investExtra"><option value="sim">Sim</option><option value="nao">Nao</option></select></div>
+      <button class="btn" onclick="App.simularInvestimento()">Analisar</button>
+    </div>
+  </div>
+  <div id="investResults" style="display:none">
+    <div class="invest-stats" id="investStats"></div>
+    <div class="charts-grid" id="investChartsArea"></div>
+    <div class="card">
+      <h2>Evolucao Mensal — Parcela vs Aluguel</h2>
+      <div class="table-scroll" id="investTableArea"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Aba Comparacao -->
+<div id="tabComparacao" class="tab-content">
+  <div class="comp-forms">
+    <div class="comp-form-card">
+      <h3>Imovel 1</h3>
+      <div class="form-grid" style="grid-template-columns:1fr 1fr">
+        <div><label>Valor Imovel (R$)</label><input type="text" id="compValor1" value="439.990,00"></div>
+        <div><label>Entrada (%)</label><input type="text" id="compEntrada1" value="40,00"></div>
+        <div><label>Taxa Juros Anual (%)</label><input type="text" id="compTaxa1" value="9,01"></div>
+        <div><label>Prazo (anos)</label><input type="number" id="compPrazo1" value="35" min="1" max="35"></div>
+      </div>
+    </div>
+    <div class="comp-form-card imovel2">
+      <h3>Imovel 2</h3>
+      <div class="form-grid" style="grid-template-columns:1fr 1fr">
+        <div><label>Valor Imovel (R$)</label><input type="text" id="compValor2" value="267.000,00"></div>
+        <div><label>Entrada (%)</label><input type="text" id="compEntrada2" value="40,00"></div>
+        <div><label>Taxa Juros Anual (%)</label><input type="text" id="compTaxa2" value="9,01"></div>
+        <div><label>Prazo (anos)</label><input type="number" id="compPrazo2" value="35" min="1" max="35"></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="divider" style="border-top:none;padding-top:0;margin-top:0">
+      <div class="divider-title"><span>Amortizacao Extraordinaria</span></div>
+      <div class="form-grid">
+        <div><label>Valor Extra (R$)</label><input type="text" id="compExtraValor" value="24.000,00"></div>
+        <div><label>A cada (meses)</label><input type="number" id="compExtraFreq" value="24" min="1" max="420"></div>
+        <div><label>A partir do mes</label><input type="number" id="compExtraInicio" value="24" min="1"></div>
+        <div><label>Reajuste Anual (%)</label><input type="text" id="compAumentoAnual" value="4,00"></div>
+      </div>
+    </div>
+    <div class="action-bar" style="margin-top:8px">
+      <div><label>Sistema</label><select id="compSistema"><option value="sac">SAC</option><option value="price">Tabela Price</option></select></div>
+      <div><label>Amort. Extra</label><select id="compExtra"><option value="sim">Sim</option><option value="nao">Nao</option></select></div>
+      <button class="btn" onclick="App.simularComparacao()">Comparar</button>
+    </div>
+  </div>
+  <div id="compResults" style="display:none">
+    <div class="card" id="compMetrics" style="margin-bottom:14px"></div>
+    <div class="card" style="margin-bottom:14px">
+      <h2>Parcelas ao Longo do Tempo</h2>
+      <div class="comp-legend" id="compLegend"></div>
+      <canvas id="chComp" height="260"></canvas>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const Utils={
+  fmt:v=>v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}),
+  fmtC:v=>'R$ '+Utils.fmt(v),
+  fmtPrazo(m){if(m<24)return m+' mes'+(m>1?'es':'');const a=Math.floor(m/12),r=m%12;return a+' ano'+(a>1?'s':'')+(r>0?' e '+r+' mes'+(r>1?'es':''):'')},
+  parseNum:id=>parseFloat(document.getElementById(id).value.replace(/\./g,'').replace(',','.'))||0,
+  getEl:id=>document.getElementById(id),
+  totalPago:p=>p.reduce((s,x)=>s+x.prestacao,0),
+  totalJuros:p=>p.reduce((s,x)=>s+x.juros,0)
+};
+
+const Calc={
+  SAC(principal,taxaMensal,meses){
+    const amortConst=principal/meses,parcelas=[];
+    let saldo=principal;
+    for(let i=1;i<=meses;i++){
+      const juros=saldo*taxaMensal,amort=amortConst,prestacao=amort+juros;
+      parcelas.push({n:i,prestacao,juros,amort,saldo:saldo-amort});
+      saldo-=amort;
+    }
+    return parcelas;
+  },
+  Price(principal,taxaMensal,meses){
+    const pmt=principal*(taxaMensal*Math.pow(1+taxaMensal,meses))/(Math.pow(1+taxaMensal,meses)-1),parcelas=[];
+    let saldo=principal;
+    for(let i=1;i<=meses;i++){
+      const juros=saldo*taxaMensal,amort=pmt-juros;
+      saldo-=amort;
+      parcelas.push({n:i,prestacao:pmt,juros,amort,saldo:Math.max(0,saldo)});
+    }
+    return parcelas;
+  },
+  WithExtra(tipo,principal,taxaMensal,meses,extraVal,extraFreq,extraInicio,aumentoAnual){
+    const parcelas=[];
+    let saldo=principal,amortC=tipo==='sac'?principal/meses:0;
+    let pmt=tipo==='price'?principal*(taxaMensal*Math.pow(1+taxaMensal,meses))/(Math.pow(1+taxaMensal,meses)-1):0;
+    for(let i=1;i<=meses&&saldo>0.01;i++){
+      const juros=saldo*taxaMensal;
+      let amort,prestacao;
+      if(tipo==='sac'){amort=Math.min(amortC,saldo);prestacao=amort+juros}
+      else{prestacao=Math.min(pmt,saldo+juros);amort=prestacao-juros}
+      let extra=0;
+      if(i>=extraInicio&&extraVal>0&&(i-extraInicio)%extraFreq===0){
+        const anos=Math.floor((i-1)/12);
+        extra=Math.min(extraVal*Math.pow(1+aumentoAnual,anos),saldo-amort);
+      }
+      saldo-=(amort+extra);
+      if(saldo<0){amort+=saldo;saldo=0}
+      parcelas.push({n:i,prestacao:prestacao+extra,prestacaoBase:prestacao,juros,amort:amort+extra,extra,saldo:Math.max(0,saldo)});
+      if(extra>0){
+        const rest=meses-i;
+        if(rest>0){
+          if(tipo==='sac')amortC=saldo/rest;
+          else pmt=saldo*(taxaMensal*Math.pow(1+taxaMensal,rest))/(Math.pow(1+taxaMensal,rest)-1);
+        }
+      }
+    }
+    return parcelas;
+  }
+};
+
+const Charts={
+  groups:{sim:[],invest:[],comp:[]},
+  _currentGroup:'sim',
+  destroy(group){
+    const g=group||this._currentGroup;
+    if(this.groups[g]){this.groups[g].forEach(c=>c.destroy());this.groups[g]=[];}
+  },
+  create(id,labels,datasets){
+    const opts={responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:12,font:{size:11}}},tooltip:{callbacks:{label:ctx=>'R$ '+Utils.fmt(ctx.parsed.y)}}},scales:{x:{title:{display:true,text:'Anos'},ticks:{maxTicksToLimit:12}},y:{title:{display:true,text:'R$'},ticks:{callback:v=>'R$ '+Utils.fmt(v)}}}};
+    const chart=new Chart(document.getElementById(id),{type:'line',data:{labels,datasets},options:opts});
+    if(this.groups[this._currentGroup])this.groups[this._currentGroup].push(chart);
+  },
+  buildDataset(parcelas,label,color,dash,anos,prop='saldo'){
+    const data=[];
+    let hitZero=false;
+    for(let i=0;i<=anos;i++){
+      if(hitZero){data.push(null);continue}
+      const mes=i*12;
+      let v;
+      const p=mes===0?parcelas[0]:mes>=parcelas.length?null:parcelas[mes-1];
+      if(!p)v=0;
+      else v=p[prop]!==undefined?p[prop]:(prop==='prestacaoBase'?p.prestacao:0);
+      data.push(v);
+      if(v<=0.01&&i>0)hitZero=true;
+    }
+    return{label,data,borderColor:color,backgroundColor:color+'20',tension:.3,pointRadius:0,borderWidth:2,fill:!dash,borderDash:dash||[],spanGaps:false};
+  },
+  buildAccumulated(parcelas,label,color,anos){
+    const data=[];
+    let acc=0;
+    for(let i=0;i<=anos;i++){
+      const mes=i*12;
+      if(mes===0)data.push(0);
+      else if(mes>=parcelas.length)data.push(acc);
+      else{
+        for(let j=(i-1)*12;j<Math.min(i*12,parcelas.length);j++)acc+=parcelas[j].juros;
+        data.push(acc);
+      }
+    }
+    return{label,data,borderColor:color,tension:.3,pointRadius:0,borderWidth:2,fill:false};
+  }
+};
+
+const UI={
+  renderSummary(principal,entrada,entradaPct,displayP,hasExtra,prazo){
+    const tjD=Utils.totalJuros(displayP),tpD=Utils.totalPago(displayP);
+    const pct=tjD/tpD*100;
+    const p1=displayP[0].prestacaoBase||displayP[0].prestacao;
+    Utils.getEl('summaryGrid').innerHTML=`
+      <div class="summary-card blue"><div class="label">Valor Financiado</div><div class="value">${Utils.fmtC(principal)}</div></div>
+      <div class="summary-card blue"><div class="label">Entrada</div><div class="value">${Utils.fmtC(entrada)}</div><div class="sub">${Utils.fmt(entradaPct)}% do imovel</div></div>
+      <div class="summary-card green"><div class="label">Parcela Inicial</div><div class="value">${Utils.fmtC(p1)}</div></div>
+      <div class="summary-card red"><div class="label">Total Juros</div><div class="value">${Utils.fmtC(tjD)}</div><div class="sub">${Utils.fmt(pct)}% do total</div></div>
+      <div class="summary-card ${hasExtra?'green':'blue'}"><div class="label">Prazo Final</div><div class="value">${Utils.fmtPrazo(displayP.length)}</div>${hasExtra?`<div class="sub">Eram ${Utils.fmtPrazo(prazo)}</div>`:''}</div>`;
+  },
+  renderComparison(sacP,priceP){
+    const tpS=Utils.totalPago(sacP),tjS=Utils.totalJuros(sacP),tpP=Utils.totalPago(priceP),tjP=Utils.totalJuros(priceP);
+    const eco=tpP-tpS,pctEco=tjP>0?eco/tjP*100:0;
+    Utils.getEl('compareSection').innerHTML=`<div class="card" style="margin-bottom:20px">
+      <h2>SAC vs Price</h2>
+      <table style="width:100%;border-collapse:collapse;font-size:.9rem">
+      <thead><tr><th style="text-align:left;padding:8px 12px">Metrica</th><th style="text-align:right;padding:8px 12px;color:var(--primary)">SAC</th><th style="text-align:right;padding:8px 12px;color:var(--green)">Price</th></tr></thead>
+      <tbody>
+      <tr><td style="padding:8px 12px;color:var(--text2)">Parcela Inicial</td><td style="text-align:right;padding:8px 12px;font-weight:600">${Utils.fmtC(sacP[0].prestacao)}</td><td style="text-align:right;padding:8px 12px;font-weight:600">${Utils.fmtC(priceP[0].prestacao)}</td></tr>
+      <tr style="background:var(--bg)"><td style="padding:8px 12px;color:var(--text2)">Ultima Parcela</td><td style="text-align:right;padding:8px 12px;font-weight:600">${Utils.fmtC(sacP[sacP.length-1].prestacao)}</td><td style="text-align:right;padding:8px 12px;font-weight:600">${Utils.fmtC(priceP[priceP.length-1].prestacao)}</td></tr>
+      <tr><td style="padding:8px 12px;color:var(--text2)">Total Juros</td><td style="text-align:right;padding:8px 12px;font-weight:600">${Utils.fmtC(tjS)}</td><td style="text-align:right;padding:8px 12px;font-weight:600">${Utils.fmtC(tjP)}</td></tr>
+      <tr style="background:var(--bg)"><td style="padding:8px 12px;color:var(--text2)">Total Pago</td><td style="text-align:right;padding:8px 12px;font-weight:600">${Utils.fmtC(tpS)}</td><td style="text-align:right;padding:8px 12px;font-weight:600">${Utils.fmtC(tpP)}</td></tr>
+      </tbody></table>
+      <div style="margin-top:12px;padding:10px 12px;background:#fef3c7;border-radius:8px;font-size:.85rem;color:#92400e;font-weight:500">Economia com SAC: <strong>${Utils.fmtC(eco)}</strong> (${Utils.fmt(pctEco)}% menos juros)</div>
+      </div>`;
+  },
+  renderCharts(sacP,priceP,sacPE,pricePE,showSac,showPrice,hasExtra,anos){
+    const allP=[showSac?(hasExtra?sacPE:sacP):null,showPrice?(hasExtra?pricePE:priceP):null].filter(Boolean);
+    const maxAno=Math.ceil(Math.max(...allP.map(p=>p.length))/12);
+    const labels=[];
+    for(let i=0;i<=maxAno;i++)labels.push(i);
+    const allParc=[showSac?(hasExtra?sacPE:sacP):null,showPrice?(hasExtra?pricePE:priceP):null].filter(Boolean);
+    const maxAnoParcelas=Math.ceil(Math.max(...allParc.map(p=>p.length))/12);
+    const labelsParcelas=[];
+    for(let i=0;i<=maxAnoParcelas;i++)labelsParcelas.push(i);
+    Utils.getEl('chartsArea').innerHTML='<div class="chart-wrap full"><h3>Valores das Parcelas</h3><canvas id="ch3" height="260"></canvas></div>'
+      +'<div class="chart-wrap"><h3>Saldo Devedor</h3><canvas id="ch1" height="260"></canvas></div>'
+      +'<div class="chart-wrap"><h3>Juros Acumulados</h3><canvas id="ch2" height="260"></canvas></div>';
+    const dsP=[];
+    if(showSac)dsP.push(Charts.buildDataset(hasExtra?sacPE:sacP,'SAC','#2563eb',null,maxAnoParcelas,'prestacaoBase'));
+    if(showPrice)dsP.push(Charts.buildDataset(hasExtra?pricePE:priceP,'Price','#10b981',null,maxAnoParcelas,'prestacaoBase'));
+    Charts.create('ch3',labelsParcelas,dsP);
+    const dsS=[];
+    if(showSac)dsS.push(Charts.buildDataset(hasExtra?sacPE:sacP,'SAC','#2563eb',null,maxAno));
+    if(showPrice)dsS.push(Charts.buildDataset(hasExtra?pricePE:priceP,'Price','#10b981',null,maxAno));
+    Charts.create('ch1',labels,dsS);
+    const dsA=[];
+    if(showSac)dsA.push(Charts.buildAccumulated(hasExtra?sacPE:sacP,'SAC','#2563eb',maxAno));
+    if(showPrice)dsA.push(Charts.buildAccumulated(hasExtra?pricePE:priceP,'Price','#10b981',maxAno));
+    Charts.create('ch2',labels,dsA);
+  },
+  renderTabs(showSac,showPrice,hasExtra){
+    let html='';
+    if(showSac)html+='<div class="tab active" onclick="App.showTable(\'sac\',this)">SAC</div>';
+    if(showPrice)html+=`<div class="tab ${!showSac?'active':''}" onclick="App.showTable('price',this)">Price</div>`;
+    if(hasExtra&&showSac)html+='<div class="tab" onclick="App.showTable(\'sacExtra\',this)">SAC + Extra</div>';
+    if(hasExtra&&showPrice)html+='<div class="tab" onclick="App.showTable(\'priceExtra\',this)">Price + Extra</div>';
+    Utils.getEl('tableTabs').innerHTML=html;
+  },
+  renderTable(parcelas,isExtra){
+    let html='<table><thead><tr><th>#</th><th>Prestacao</th><th>Juros</th><th>Amortizacao</th>';
+    if(isExtra)html+='<th>Extra</th>';
+    html+='<th>Saldo Devedor</th></tr></thead><tbody>';
+    parcelas.forEach(r=>{
+      const style=isExtra&&r.extra>0?' style="background:#f0fdf4"':'';
+      html+=`<tr${style}><td>${r.n}</td><td>${Utils.fmtC(r.prestacao)}</td><td>${Utils.fmtC(r.juros)}</td><td>${Utils.fmtC(r.amort)}</td>`;
+      if(isExtra)html+=`<td style="color:var(--green);font-weight:600">${r.extra>0?Utils.fmtC(r.extra):'-'}</td>`;
+      html+=`<td>${Utils.fmtC(r.saldo)}</td></tr>`;
+    });
+    Utils.getEl('tableArea').innerHTML=html+'</tbody></table>';
+  }
+};
+
+const App={
+  data:{},
+  simular(){
+    Charts.destroy('sim');Charts._currentGroup='sim';
+    const valorImovel=Utils.parseNum('valorImovel'),entradaPct=Utils.parseNum('entradaPct');
+    const entrada=valorImovel*entradaPct/100;
+    const taxaAnual=Utils.parseNum('taxaJuros'),prazoAnos=parseInt(Utils.getEl('prazoAnos').value);
+    const sistema=Utils.getEl('sistema').value,prazo=prazoAnos*12;
+    const principal=valorImovel-entrada;
+    if(principal<=0||taxaAnual<=0||prazo<=0){alert('Preencha os campos corretamente.');return}
+    const taxaMensal=Math.pow(1+taxaAnual/100,1/12)-1;
+    const sacP=Calc.SAC(principal,taxaMensal,prazo);
+    const priceP=Calc.Price(principal,taxaMensal,prazo);
+    const showSac=sistema==='sac'||sistema==='ambos';
+    const showPrice=sistema==='price'||sistema==='ambos';
+    const extraVal=Utils.parseNum('extraValor');
+    const extraFreq=parseInt(Utils.getEl('extraFreq').value)||24;
+    const extraInicio=parseInt(Utils.getEl('extraInicio').value)||1;
+    const aumentoAnual=Utils.parseNum('aumentoAnual')/100;
+    const toggleExtra=Utils.getEl('usarExtra').value==='sim';
+    const hasExtra=toggleExtra&&extraVal>0;
+    let sacPE=null,pricePE=null;
+    if(hasExtra){
+      sacPE=Calc.WithExtra('sac',principal,taxaMensal,prazo,extraVal,extraFreq,extraInicio,aumentoAnual);
+      pricePE=Calc.WithExtra('price',principal,taxaMensal,prazo,extraVal,extraFreq,extraInicio,aumentoAnual);
+    }
+    const displayP=hasExtra?(showSac?sacPE:pricePE):(showSac?sacP:priceP);
+    this.data={sacP,priceP,sacPE,pricePE};
+    UI.renderSummary(principal,entrada,entradaPct,displayP,hasExtra,prazo);
+    if(sistema==='ambos')UI.renderComparison(sacP,priceP);
+    else Utils.getEl('compareSection').innerHTML='';
+    UI.renderCharts(sacP,priceP,sacPE,pricePE,showSac,showPrice,hasExtra,prazoAnos);
+    UI.renderTabs(showSac,showPrice,hasExtra);
+    this.showTable(showSac?'sac':'price',Utils.getEl('tableTabs').querySelector('.tab'));
+    Utils.getEl('results').style.display='block';
+    Utils.getEl('results').scrollIntoView({behavior:'smooth'});
+  },
+  switchMainTab(tab,el){
+    document.querySelectorAll('.main-tab').forEach(t=>t.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+    Utils.getEl('tab'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
+  },
+  simularInvestimento(){
+    Charts.destroy('invest');Charts._currentGroup='invest';
+    const valorImovel=Utils.parseNum('invValorImovel'),entradaPct=Utils.parseNum('invEntradaPct');
+    const entrada=valorImovel*entradaPct/100;
+    const taxaAnual=Utils.parseNum('invTaxaJuros'),prazoAnos=parseInt(Utils.getEl('invPrazoAnos').value);
+    const prazo=prazoAnos*12;
+    const principal=valorImovel-entrada;
+    if(principal<=0||taxaAnual<=0||prazo<=0){alert('Preencha os dados do financiamento corretamente.');return}
+    const taxaMensal=Math.pow(1+taxaAnual/100,1/12)-1;
+
+    const sistema=Utils.getEl('investSistema').value;
+    const usarExtra=Utils.getEl('investExtra').value==='sim';
+    const extraVal=Utils.parseNum('invExtraValor');
+    const extraFreq=parseInt(Utils.getEl('invExtraFreq').value)||24;
+    const extraInicio=parseInt(Utils.getEl('invExtraInicio').value)||1;
+    const aumentoAnual=Utils.parseNum('invAumentoAnual')/100;
+
+    let parcelas;
+    if(usarExtra&&extraVal>0){
+      parcelas=Calc.WithExtra(sistema,principal,taxaMensal,prazo,extraVal,extraFreq,extraInicio,aumentoAnual);
+    } else {
+      parcelas=sistema==='sac'?Calc.SAC(principal,taxaMensal,prazo):Calc.Price(principal,taxaMensal,prazo);
+    }
+
+    const aluguelInicial=Utils.parseNum('aluguelValor');
+    const reajusteAluguel=Utils.parseNum('aluguelReajuste')/100;
+    if(aluguelInicial<=0){alert('Informe o valor do aluguel.');return}
+
+    const meses=parcelas.length;
+    const rows=[];
+    let breakevenMes=null;
+    let acumulado=0;
+
+    for(let i=0;i<meses;i++){
+      const ano=Math.floor(i/12);
+      const aluguel=aluguelInicial*Math.pow(1+reajusteAluguel,ano);
+      const prestacao=parcelas[i].prestacaoBase||parcelas[i].prestacao;
+      const diff=aluguel-prestacao;
+      acumulado+=diff;
+      if(breakevenMes===null&&diff>=0)breakevenMes=i+1;
+      rows.push({mes:i+1,aluguel,prestacao,diff,acumulado});
+    }
+
+    let acumBreakevenMes=null;
+    for(let i=0;i<rows.length;i++){
+      if(rows[i].acumulado>=0){acumBreakevenMes=rows[i].mes;break}
+    }
+
+    const primeiraParcela=parcelas[0].prestacaoBase||parcelas[0].prestacao;
+    const diffInicial=aluguelInicial-primeiraParcela;
+
+    const statsEl=Utils.getEl('investStats');
+    statsEl.innerHTML=`
+      <div class="invest-stat"><div class="label">Diferenca Inicial (Mes 1)</div>
+        <div class="value" style="color:${diffInicial>=0?'var(--green)':'var(--red)'}">${Utils.fmtC(diffInicial)}/mes</div>
+        <div class="sub">Aluguel ${Utils.fmtC(aluguelInicial)} — Parcela ${Utils.fmtC(primeiraParcela)}</div></div>
+      <div class="invest-stat"><div class="label">${breakevenMes?'Parcela &lt; Aluguel a partir do':'Parcela sempre maior'}</div>
+        <div class="value" style="color:${breakevenMes?'var(--green)':'var(--red)'}">${breakevenMes?'Mes '+breakevenMes+' ('+Utils.fmtPrazo(breakevenMes)+')':'—'}</div>
+        <div class="sub">${breakevenMes?'A partir daqui voce lucra todo mes':'O aluguel nunca supera a parcela no prazo'}</div></div>
+      <div class="invest-stat"><div class="label">${acumBreakevenMes?'Recupera Investimento no':'Saldo Acumulado Final'}</div>
+        <div class="value" style="color:${acumBreakevenMes?'var(--green)':'var(--red)'}">${acumBreakevenMes?'Mes '+acumBreakevenMes+' ('+Utils.fmtPrazo(acumBreakevenMes)+')':Utils.fmtC(acumulado)}</div>
+        <div class="sub">${acumBreakevenMes?'Quando o acumulado fica positivo':'Balanco ao fim do financiamento'}</div></div>`;
+
+    const labels=[],dsAluguel=[],dsParcela=[],dsAcum=[];
+    for(let i=0;i<rows.length;i+=12){
+      const r=rows[i];
+      labels.push(Math.floor(i/12));
+      dsAluguel.push(r.aluguel);
+      dsParcela.push(r.prestacao);
+      dsAcum.push(r.acumulado);
+    }
+    Utils.getEl('investChartsArea').innerHTML=
+      '<div class="chart-wrap"><h3>Parcela vs Aluguel (anual)</h3><canvas id="chInv1" height="260"></canvas></div>'+
+      '<div class="chart-wrap"><h3>Diferenca Acumulada (Aluguel - Parcela)</h3><canvas id="chInv2" height="260"></canvas></div>';
+    Charts.create('chInv1',labels,[
+      {label:'Aluguel',data:dsAluguel,borderColor:'#10b981',backgroundColor:'#10b98120',tension:.3,pointRadius:2,borderWidth:2,fill:false},
+      {label:'Parcela',data:dsParcela,borderColor:'#ef4444',backgroundColor:'#ef444420',tension:.3,pointRadius:2,borderWidth:2,fill:false}
+    ]);
+    Charts.create('chInv2',labels,[
+      {label:'Saldo Acumulado',data:dsAcum,tension:.3,pointRadius:2,borderWidth:2,fill:true,
+       backgroundColor:'#10b98130',
+       borderColor:'#10b981',
+       segment:{
+         borderColor:ctx=>ctx.p1.parsed.y<0?'#ef4444':'#10b981',
+         backgroundColor:ctx=>ctx.p1.parsed.y<0?'#ef444430':'#10b98130'
+       }}
+    ]);
+
+    let tableHtml='<table class="timeline-table"><thead><tr><th>Ano</th><th>Mes</th><th>Aluguel</th><th>Parcela</th><th>Diferenca</th><th>Acumulado</th><th>Fase</th></tr></thead><tbody>';
+    for(let i=0;i<rows.length;i++){
+      const r=rows[i];
+      const isYearStart=i%12===0;
+      const isBreakeven=breakevenMes&&r.mes===breakevenMes;
+      const isLast=i===rows.length-1;
+      if(!isYearStart&&!isBreakeven&&!isLast)continue;
+      const cls=isBreakeven?'breakeven':r.diff>=0?'positive':'negative';
+      const phase=r.diff>=0?'<span class="phase-indicator phase-profit"></span>Lucro':'<span class="phase-indicator phase-loss"></span>Prejuizo';
+      tableHtml+=`<tr class="${cls}"><td>${Math.floor(i/12)+1}</td><td>${r.mes}</td><td>${Utils.fmtC(r.aluguel)}</td><td>${Utils.fmtC(r.prestacao)}</td><td style="color:${r.diff>=0?'var(--green)':'var(--red)'};font-weight:600">${Utils.fmtC(r.diff)}</td><td style="color:${r.acumulado>=0?'var(--green)':'var(--red)'};font-weight:600">${Utils.fmtC(r.acumulado)}</td><td style="text-align:left">${isBreakeven?'<strong>EQUILIBRIO</strong>':phase}</td></tr>`;
+    }
+    tableHtml+='</tbody></table>';
+    Utils.getEl('investTableArea').innerHTML=tableHtml;
+    Utils.getEl('investResults').style.display='block';
+    Utils.getEl('investResults').scrollIntoView({behavior:'smooth'});
+  },
+  showTable(type,el){
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    el.classList.add('active');
+    const isExtra=type.includes('Extra');
+    const p=type==='sac'?this.data.sacP:type==='price'?this.data.priceP:type==='sacExtra'?this.data.sacPE:this.data.pricePE;
+    if(p)UI.renderTable(p,isExtra);
+  }
+};
+
+App.simularComparacao=function(){
+  Charts.destroy('comp');Charts._currentGroup='comp';
+
+  const taxa1=Utils.parseNum('compTaxa1'),prazo1=parseInt(Utils.getEl('compPrazo1').value)*12;
+  const taxa2=Utils.parseNum('compTaxa2'),prazo2=parseInt(Utils.getEl('compPrazo2').value)*12;
+  const taxaMensal1=Math.pow(1+taxa1/100,1/12)-1;
+  const taxaMensal2=Math.pow(1+taxa2/100,1/12)-1;
+
+  const extraVal=Utils.parseNum('compExtraValor');
+  const extraFreq=parseInt(Utils.getEl('compExtraFreq').value)||24;
+  const extraInicio=parseInt(Utils.getEl('compExtraInicio').value)||1;
+  const aumentoAnual=Utils.parseNum('compAumentoAnual')/100;
+  const sistema=Utils.getEl('compSistema').value;
+  const usarExtra=Utils.getEl('compExtra').value==='sim';
+
+  function calcImovel(valorId,entradaId,taxaMensal,prazo){
+    const v=Utils.parseNum(valorId),ep=Utils.parseNum(entradaId);
+    const e=v*ep/100,p=v-e;
+    if(p<=0||taxaMensal<=0||prazo<=0)return null;
+    let parcelas;
+    if(usarExtra&&extraVal>0)parcelas=Calc.WithExtra(sistema,p,taxaMensal,prazo,extraVal,extraFreq,extraInicio,aumentoAnual);
+    else parcelas=sistema==='sac'?Calc.SAC(p,taxaMensal,prazo):Calc.Price(p,taxaMensal,prazo);
+    return{valor:v,entrada:e,entradaPct:ep,principal:p,parcelas};
+  }
+
+  const im1=calcImovel('compValor1','compEntrada1',taxaMensal1,prazo1);
+  const im2=calcImovel('compValor2','compEntrada2',taxaMensal2,prazo2);
+  if(!im1||!im2){alert('Preencha os valores dos imoveis corretamente.');return}
+
+  const tj1=Utils.totalJuros(im1.parcelas),tp1=Utils.totalPago(im1.parcelas)+im1.entrada;
+  const tj2=Utils.totalJuros(im2.parcelas),tp2=Utils.totalPago(im2.parcelas)+im2.entrada;
+
+  const p1first=im1.parcelas[0].prestacaoBase||im1.parcelas[0].prestacao;
+  const p2first=im2.parcelas[0].prestacaoBase||im2.parcelas[0].prestacao;
+  const p1last=im1.parcelas[im1.parcelas.length-1].prestacaoBase||im1.parcelas[im1.parcelas.length-1].prestacao;
+  const p2last=im2.parcelas[im2.parcelas.length-1].prestacaoBase||im2.parcelas[im2.parcelas.length-1].prestacao;
+
+  function diffCell(v1,v2,lowerIsBetter){
+    const diff=v2-v1;
+    if(diff===0)return'<td class="comp-table-diff">—</td>';
+    const favorable=lowerIsBetter?diff<0:diff>0;
+    const cls=favorable?'pos':'neg';
+    const sign=diff>0?'+':'';
+    return`<td class="comp-table-diff ${cls}">${sign}${Utils.fmtC(diff)}</td>`;
+  }
+  function winCls(v1,v2,lowerIsBetter,which){
+    const w1=lowerIsBetter?v1<v2:v1>v2;
+    const w2=lowerIsBetter?v2<v1:v2>v1;
+    return(which===1&&w1)||(which===2&&w2)?'font-weight:700':'';
+  }
+
+  const rows=[
+    {label:'Valor do Imovel',v1:im1.valor,v2:im2.valor,fmt:Utils.fmtC,lower:false},
+    {label:'Entrada',v1:im1.entrada,v2:im2.entrada,fmt:Utils.fmtC,lower:false},
+    {label:'Valor Financiado',v1:im1.principal,v2:im2.principal,fmt:Utils.fmtC,lower:false},
+    {label:'Taxa de Juros',v1:taxa1,v2:taxa2,fmt:v=>Utils.fmt(v)+'% a.a.',lower:true},
+    {label:'Prazo',v1:prazo1,v2:prazo2,fmt:v=>Utils.fmtPrazo(v),lower:true,
+     diffFmt:diff=>{
+       if(diff===0)return'<td class="comp-table-diff">—</td>';
+       const sign=diff>0?'+':'-';
+       const cls=diff<0?'pos':'neg';
+       return`<td class="comp-table-diff ${cls}">${sign}${Utils.fmtPrazo(Math.abs(diff))}</td>`;
+     }},
+    {label:'Parcela Inicial',v1:p1first,v2:p2first,fmt:Utils.fmtC,lower:true},
+    {label:'Ultima Parcela',v1:p1last,v2:p2last,fmt:Utils.fmtC,lower:true},
+    {label:'Total Juros',v1:tj1,v2:tj2,fmt:Utils.fmtC,lower:true,
+      sub1:Utils.fmt(tj1/tp1*100)+'% do total',sub2:Utils.fmt(tj2/tp2*100)+'% do total'},
+    {label:'Total Pago',v1:tp1,v2:tp2,fmt:Utils.fmtC,lower:true},
+    {label:'Prazo Final',v1:im1.parcelas.length,v2:im2.parcelas.length,fmt:v=>Utils.fmtPrazo(v),lower:true,
+     diffFmt:diff=>{
+       if(diff===0)return'<td class="comp-table-diff">—</td>';
+       const sign=diff>0?'+':'-';
+       const cls=diff<0?'pos':'neg';
+       return`<td class="comp-table-diff ${cls}">${sign}${Utils.fmtPrazo(Math.abs(diff))}</td>`;
+     }}
+  ];
+
+  let tableHtml='<h2>Comparativo</h2><table class="comp-table"><thead><tr>'
+    +'<th style="text-align:left">Metrica</th>'
+    +'<th class="im1">Imovel 1</th>'
+    +'<th class="im2">Imovel 2</th>'
+    +'<th>Diferenca</th></tr></thead><tbody>';
+  rows.forEach((r,i)=>{
+    const bg=i%2===0?'':'background:var(--bg)';
+    const s1=winCls(r.v1,r.v2,r.lower,1);
+    const s2=winCls(r.v1,r.v2,r.lower,2);
+    const sub1=r.sub1?`<div style="font-size:.65rem;color:var(--text2);font-weight:400">${r.sub1}</div>`:'';
+    const sub2=r.sub2?`<div style="font-size:.65rem;color:var(--text2);font-weight:400">${r.sub2}</div>`:'';
+    const diffTd=r.diffFmt?r.diffFmt(r.v2-r.v1):diffCell(r.v1,r.v2,r.lower);
+    tableHtml+=`<tr style="${bg}"><td style="text-align:left;color:var(--text2)">${r.label}</td>`
+      +`<td style="${s1}">${r.fmt(r.v1)}${sub1}</td>`
+      +`<td style="${s2}">${r.fmt(r.v2)}${sub2}</td>`
+      +`${diffTd}</tr>`;
+  });
+  tableHtml+='</tbody></table>';
+  Utils.getEl('compMetrics').innerHTML=tableHtml;
+
+  Utils.getEl('compLegend').innerHTML=
+    `<span><span class="comp-legend-dot" style="background:#2563eb"></span><strong>Imovel 1</strong> — ${Utils.fmtC(im1.valor)}</span>`+
+    `<span><span class="comp-legend-dot" style="background:#10b981"></span><strong>Imovel 2</strong> — ${Utils.fmtC(im2.valor)}</span>`;
+
+  Charts._currentGroup='comp';
+  if(!Charts.groups['comp'])Charts.groups['comp']=[];
+  const maxAno=Math.ceil(Math.max(im1.parcelas.length,im2.parcelas.length)/12);
+  const labels=[];
+  for(let i=0;i<=maxAno;i++)labels.push(i);
+  Charts.create('chComp',labels,[
+    Charts.buildDataset(im1.parcelas,'Imovel 1','#2563eb',null,maxAno,'prestacaoBase'),
+    Charts.buildDataset(im2.parcelas,'Imovel 2','#10b981',null,maxAno,'prestacaoBase')
+  ]);
+
+  Utils.getEl('compResults').style.display='block';
+  Utils.getEl('compResults').scrollIntoView({behavior:'smooth'});
+};
+
+function applyBrlMask(el){
+  let v=el.value.replace(/\D/g,'');
+  if(!v)return;
+  v=(parseInt(v)/100).toFixed(2);
+  el.value=parseFloat(v).toLocaleString('pt-BR',{minimumFractionDigits:2});
+}
+
+// BRL mask for monetary fields
+['extraValor','aluguelValor','compValor1','compValor2',
+ 'invExtraValor','compExtraValor'].forEach(id=>{
+  const el=Utils.getEl(id);
+  if(el)el.addEventListener('input',function(){applyBrlMask(this)});
+});
+
+// Valor imovel fields with BRL mask
+['valorImovel','invValorImovel'].forEach(id=>{
+  const el=Utils.getEl(id);
+  if(el)el.addEventListener('input',function(){applyBrlMask(this)});
+});
+
+// Percentage fields — only digits and comma
+['entradaPct','taxaJuros','aumentoAnual',
+ 'invEntradaPct','invTaxaJuros','invAumentoAnual','aluguelReajuste',
+ 'compEntrada1','compEntrada2','compTaxa1','compTaxa2','compAumentoAnual'].forEach(id=>{
+  const el=Utils.getEl(id);
+  if(el)el.addEventListener('input',function(){this.value=this.value.replace(/[^\d,]/g,'')});
+});
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./sw.js');
+  });
+}
+</script>
+</body>
+</html>
