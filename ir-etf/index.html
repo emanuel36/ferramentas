@@ -256,7 +256,7 @@
       transition: color 0.3s;
     }
 
-    .darf-amount.profit { color: var(--fg); }
+    .darf-amount.profit { color: var(--red); }
     .darf-amount.zero   { color: var(--green); }
 
     .darf-right {
@@ -319,6 +319,92 @@
     .stat-value.pos { color: var(--green); }
     .stat-value.neg { color: var(--red); }
 
+    /* ── Stacked bar chart ── */
+    .stacked-bar {
+      display: flex;
+      height: 6px;
+      border-radius: 3px;
+      overflow: hidden;
+      background: var(--border);
+      margin: 0.65rem 0 0.3rem;
+    }
+    .bar-seg { transition: flex 0.4s ease; min-width: 0; }
+    .bar-cost   { background: var(--accent); }
+    .bar-profit { background: var(--green); }
+    .bar-tax    { background: var(--red); }
+
+    .bar-legend {
+      display: flex;
+      gap: 0.75rem;
+      font-size: 0.45rem;
+      color: var(--faint);
+      letter-spacing: 0.05em;
+    }
+    .legend-dot {
+      display: inline-block;
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      margin-right: 0.2rem;
+      vertical-align: middle;
+    }
+    .dot-cost   { background: var(--accent); }
+    .dot-profit { background: var(--green); }
+    .dot-tax    { background: var(--red); }
+
+  /* ── Ticker fetch ── */
+  .ticker-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+    margin-bottom: 0.65rem;
+  }
+  .ticker-field { flex: 1; }
+  .ticker-field input {
+    background: transparent;
+    border: none;
+    border-bottom: 1.5px solid var(--border-in);
+    color: var(--fg);
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.3rem 0;
+    outline: none;
+    width: 100%;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    -moz-appearance: textfield;
+  }
+  .ticker-field input:focus { border-bottom-color: var(--accent); }
+
+  .btn-fetch {
+    background: var(--accent-bg);
+    border: 1.5px solid var(--border-in);
+    color: var(--accent);
+    font-size: 1rem;
+    border-radius: 6px;
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, border-color 0.15s;
+    padding-bottom: 0.3rem;
+  }
+  .btn-fetch:hover  { background: var(--border); border-color: var(--accent); }
+  .btn-fetch:active { opacity: 0.8; }
+  .btn-fetch.loading { opacity: 0.5; cursor: not-allowed; }
+
+  .ticker-status {
+    font-size: 0.52rem;
+    min-height: 0.85rem;
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.02em;
+  }
+  .ticker-status.ok  { color: var(--green); }
+  .ticker-status.err { color: var(--red); }
+
   </style>
 </head>
 <body>
@@ -326,7 +412,7 @@
 <header>
   <div>
     <h1>ETF · Imposto</h1>
-    <div class="header-sub">B3 · 15% sobre lucro líquido</div>
+    <div class="header-sub">15% sobre lucro líquido</div>
   </div>
   <span class="darf-badge">DARF</span>
 </header>
@@ -356,6 +442,14 @@
   <div class="card">
     <div class="card-label">Operação</div>
     <div class="card-body">
+      <div class="ticker-row">
+        <div class="field ticker-field">
+          <label for="tickerInput">Ticker</label>
+          <input type="text" id="tickerInput" placeholder="SPXI11" autocomplete="off" autocapitalize="characters" spellcheck="false">
+        </div>
+        <button type="button" id="btnFetch" class="btn-fetch" aria-label="Buscar cotação">↻</button>
+      </div>
+      <div class="ticker-status" id="tickerStatus"></div>
       <div class="field-grid">
         <div class="field">
           <label for="currentPrice">Preço atual</label>
@@ -421,6 +515,16 @@
           <span class="stat-value" id="resRent">—</span>
         </div>
       </div>
+      <div class="stacked-bar">
+        <div class="bar-seg bar-cost"   id="barVendaCost"   style="flex:0"></div>
+        <div class="bar-seg bar-profit" id="barVendaProfit" style="flex:0"></div>
+        <div class="bar-seg bar-tax"    id="barVendaTax"    style="flex:0"></div>
+      </div>
+      <div class="bar-legend">
+        <span><span class="legend-dot dot-cost"></span>Custo</span>
+        <span><span class="legend-dot dot-profit"></span>Lucro</span>
+        <span><span class="legend-dot dot-tax"></span>IR</span>
+      </div>
     </div>
   </div>
 
@@ -430,7 +534,7 @@
     <div class="card-body">
       <div class="stat-grid">
         <div class="stat">
-          <span class="stat-label">Saldo restante</span>
+          <span class="stat-label">Valor atual</span>
           <span class="stat-value" id="resSaldo">—</span>
         </div>
         <div class="stat">
@@ -438,11 +542,11 @@
           <span class="stat-value" id="resCustoTotal">—</span>
         </div>
         <div class="stat">
-          <span class="stat-label">Saldo líquido</span>
+          <span class="stat-label">Valor líquido (sem IR)</span>
           <span class="stat-value" id="resSaldoLiquido">—</span>
         </div>
         <div class="stat">
-          <span class="stat-label">Imposto se vender tudo</span>
+          <span class="stat-label">IR se vender tudo</span>
           <span class="stat-value" id="resImpostoRestante">—</span>
         </div>
       </div>
@@ -563,6 +667,14 @@
     impRestEl.textContent = formatBRL(result.impostoRestante);
     impRestEl.className = 'stat-value' + (result.impostoRestante > 0 ? ' neg' : '');
 
+    // Bar: Esta venda
+    const totalVenda = result.venda;
+    const lucroPos   = Math.max(0, result.lucro);
+    const taxPos     = result.imposto;
+    document.getElementById('barVendaCost').style.flex   = result.custo / totalVenda;
+    document.getElementById('barVendaProfit').style.flex = lucroPos / totalVenda;
+    document.getElementById('barVendaTax').style.flex    = taxPos / totalVenda;
+
     panel.classList.add('visible');
   }
 
@@ -613,25 +725,39 @@
   const STORAGE_KEY = 'etf_calc_portfolio';
 
   function savePortfolio() {
-    const avgPrice = document.getElementById('avgPrice').value;
-    const totalQty = document.getElementById('totalQty').value;
-    if (avgPrice || totalQty) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ avgPrice, totalQty }));
-    }
+    const data = {
+      avgPrice:     document.getElementById('avgPrice').value,
+      totalQty:     document.getElementById('totalQty').value,
+      ticker:       document.getElementById('tickerInput').value,
+      currentPrice: document.getElementById('currentPrice').value,
+      sellQty:      document.getElementById('sellQty').value,
+      sellValue:    document.getElementById('sellValue').value,
+      quoteTs:      localStorage.getItem(STORAGE_KEY)
+                      ? (JSON.parse(localStorage.getItem(STORAGE_KEY)).quoteTs ?? null)
+                      : null,
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }
 
   function loadPortfolio() {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (!saved) return;
-      const { avgPrice, totalQty } = JSON.parse(saved);
-      if (avgPrice) document.getElementById('avgPrice').value = avgPrice;
-      if (totalQty) document.getElementById('totalQty').value = totalQty;
+      const d = JSON.parse(saved);
+      if (d.avgPrice)     document.getElementById('avgPrice').value     = d.avgPrice;
+      if (d.totalQty)     document.getElementById('totalQty').value     = d.totalQty;
+      if (d.ticker)       document.getElementById('tickerInput').value  = d.ticker;
+      if (d.currentPrice) document.getElementById('currentPrice').value = d.currentPrice;
+      if (d.sellQty)      document.getElementById('sellQty').value      = d.sellQty;
+      if (d.sellValue)    document.getElementById('sellValue').value    = d.sellValue;
+      if (d.quoteTs)      updateQuoteAge(d.quoteTs);
     } catch (_) { /* ignora JSON corrompido */ }
   }
 
-  document.getElementById('avgPrice').addEventListener('change', savePortfolio);
-  document.getElementById('totalQty').addEventListener('change', savePortfolio);
+  ['avgPrice','totalQty','currentPrice','sellQty','sellValue'].forEach(id => {
+    document.getElementById(id).addEventListener('change', savePortfolio);
+  });
+  document.getElementById('tickerInput').addEventListener('change', savePortfolio);
 
   /* ── Form submit ── */
   document.getElementById('taxForm').addEventListener('submit', (e) => {
@@ -645,6 +771,85 @@
 
     const result = calculateTax(avgPrice, totalQty, currentPrice, sellQty);
     renderResult(result);
+  });
+
+  /* ── Quote age display ── */
+  let quoteAgeInterval = null;
+
+  function updateQuoteAge(ts) {
+    const statusEl = document.getElementById('tickerStatus');
+    if (!statusEl.classList.contains('ok')) return;
+    const diff = Math.floor((Date.now() - ts) / 1000);
+    let label;
+    if (diff < 60)        label = `há ${diff}s`;
+    else if (diff < 3600) label = `há ${Math.floor(diff / 60)}min`;
+    else                  label = `há ${Math.floor(diff / 3600)}h`;
+    // preserve the asset name part before " · "
+    const parts = statusEl.textContent.split(' · ');
+    statusEl.textContent = `${parts[0]} · ${label}`;
+  }
+
+  function startQuoteAgeTimer(ts) {
+    if (quoteAgeInterval) clearInterval(quoteAgeInterval);
+    quoteAgeInterval = setInterval(() => updateQuoteAge(ts), 30000);
+  }
+
+  /* ── Quote fetch (brapi.dev) ── */
+  async function fetchQuote() {
+    const ticker   = document.getElementById('tickerInput').value.trim().toUpperCase();
+    const statusEl = document.getElementById('tickerStatus');
+    const btnEl    = document.getElementById('btnFetch');
+    const priceEl  = document.getElementById('currentPrice');
+
+    if (!ticker) {
+      statusEl.textContent = 'Informe o ticker (ex: BOVA11)';
+      statusEl.className   = 'ticker-status err';
+      return;
+    }
+
+    btnEl.classList.add('loading');
+    btnEl.disabled   = true;
+    statusEl.textContent = 'Buscando…';
+    statusEl.className   = 'ticker-status';
+
+    try {
+      const res  = await fetch(`https://brapi.dev/api/quote/${ticker}?fundamental=false&token=SEU_TOKEN_BRAPI`);
+      const data = await res.json();
+      const quote = data?.results?.[0];
+
+      if (!quote || quote.regularMarketPrice == null) {
+        throw new Error('Ativo não encontrado');
+      }
+
+      const now = Date.now();
+      priceEl.value        = quote.regularMarketPrice.toFixed(2);
+      priceEl.classList.remove('derived');
+      statusEl.textContent = `${quote.shortName ?? ticker} · há 0s`;
+      statusEl.className   = 'ticker-status ok';
+      // persist timestamp
+      try {
+        const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}');
+        stored.quoteTs = now;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+      } catch (_) {}
+      startQuoteAgeTimer(now);
+      // resync sell value field if qty already filled
+      syncSellFields('qty');
+      savePortfolio();
+    } catch (err) {
+      statusEl.textContent = err.message === 'Ativo não encontrado'
+        ? 'Ticker não encontrado'
+        : 'Erro ao buscar — verifique a conexão';
+      statusEl.className = 'ticker-status err';
+    } finally {
+      btnEl.classList.remove('loading');
+      btnEl.disabled = false;
+    }
+  }
+
+  document.getElementById('btnFetch').addEventListener('click', fetchQuote);
+  document.getElementById('tickerInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); fetchQuote(); }
   });
 
   loadPortfolio();
