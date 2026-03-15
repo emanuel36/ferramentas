@@ -356,7 +356,6 @@
     display: flex;
     align-items: flex-end;
     gap: 0.5rem;
-    margin-bottom: 0.65rem;
   }
   .ticker-field { flex: 1; }
   .ticker-field input {
@@ -442,28 +441,27 @@
   <div class="card">
     <div class="card-label">Operação</div>
     <div class="card-body">
-      <div class="ticker-row">
+      <div class="field-grid">
         <div class="field ticker-field">
           <label for="tickerInput">Ticker</label>
           <input type="text" id="tickerInput" placeholder="SPXI11" autocomplete="off" autocapitalize="characters" spellcheck="false">
         </div>
-        <button type="button" id="btnFetch" class="btn-fetch" aria-label="Buscar cotação">↻</button>
+        <div class="ticker-row">
+          <div class="field ticker-field">
+            <label for="currentPrice">Preço atual</label>
+            <input type="number" id="currentPrice" step="0.01" min="0.01" placeholder="0,00" required>
+            <span class="err" id="currentPriceErr">Valor inválido</span>
+          </div>
+          <button type="button" id="btnFetch" class="btn-fetch" aria-label="Buscar cotação">↻</button>
+        </div>
       </div>
       <div class="ticker-status" id="tickerStatus"></div>
       <div class="field-grid">
-        <div class="field">
-          <label for="currentPrice">Preço atual</label>
-          <input type="number" id="currentPrice" step="0.01" min="0.01" placeholder="0,00" required>
-          <span class="err" id="currentPriceErr">Valor inválido</span>
-        </div>
         <div class="field">
           <label for="sellQty">Qtd a vender</label>
           <input type="number" id="sellQty" step="1" min="1" placeholder="0" required>
           <span class="err" id="sellQtyErr">Qtd inválida</span>
         </div>
-      </div>
-      <div class="sell-or">ou</div>
-      <div class="field-grid single">
         <div class="field">
           <label for="sellValue">Valor a vender (R$)</label>
           <input type="number" id="sellValue" step="0.01" min="0.01" placeholder="0,00">
