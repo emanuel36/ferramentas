@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>ETF · Imposto</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500&display=swap">
+  <style>
+
+    :root {
+      --bg:        #F0F2F5;
+      --surface:   #FFFFFF;
+      --fg:        #1a2035;
+      --muted:     #6B7A99;
+      --faint:     #9CA3AF;
+      --border:    #E5E7EB;
+      --border-in: #D1D5DB;
+      --accent:    #2563EB;
+      --accent-bg: #F8FAFF;
+      --green:     #16a34a;
+      --green-bg:  #F0FDF4;
+      --red:       #DC2626;
+      --shadow:    0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { font-size: 16px; }
+
+    body {
+      font-family: 'Geist Mono', ui-monospace, monospace;
+      background: var(--bg);
+      color: var(--fg);
+      min-height: 100dvh;
+      padding: 1.75rem 1.25rem calc(2rem + env(safe-area-inset-bottom, 0px));
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ── Header ── */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--fg);
+      line-height: 1.2;
+    }
+
+    .header-sub {
+      font-size: 0.6rem;
+      color: var(--muted);
+      letter-spacing: 0.03em;
+      margin-top: 0.2rem;
+    }
+
+    .darf-badge {
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.5rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      margin-top: 0.15rem;
+      flex-shrink: 0;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--surface);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      margin-bottom: 0.75rem;
+      overflow: hidden;
+    }
+
+    .card-label {
+      font-size: 0.5rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0.65rem 0.9rem 0;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-body {
+      padding: 0 0.9rem 0.75rem;
+    }
+
+    /* ── Field grid ── */
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.65rem 0.75rem;
+    }
+
+    .field-grid.single {
+      grid-template-columns: 1fr;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    label {
+      font-size: 0.5rem;
+      font-weight: 400;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--faint);
+    }
+
+    input[type="number"] {
+      background: transparent;
+      border: none;
+      border-bottom: 1.5px solid var(--border-in);
+      color: var(--fg);
+      font-family: 'Geist Mono', ui-monospace, monospace;
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 0.3rem 0;
+      outline: none;
+      border-radius: 0;
+      transition: border-bottom-color 0.15s;
+      -moz-appearance: textfield;
+      width: 100%;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+    input[type="number"]:focus {
+      border-bottom-color: var(--accent);
+    }
+
+    input[type="number"].error {
+      border-bottom-color: var(--red);
+    }
+
+    input[type="number"].derived {
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .err {
+      display: none;
+      font-size: 0.55rem;
+      color: var(--red);
+      margin-top: 0.1rem;
+    }
+
+    .err.visible { display: block; }
+
+    .hint {
+      font-size: 0.55rem;
+      color: var(--faint);
+      min-height: 0.85rem;
+    }
+
+    /* ── Sell-or separator ── */
+    .sell-or {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin: 0.5rem 0;
+      color: var(--faint);
+      font-size: 0.55rem;
+    }
+
+    .sell-or::before,
+    .sell-or::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Button ── */
+    .btn-calc {
+      display: block;
+      width: 100%;
+      padding: 0.85rem 1rem;
+      margin-top: 0.75rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Geist Mono', ui-monospace, monospace;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.15s, opacity 0.15s;
+    }
+
+    .btn-calc:hover  { background: #1d4ed8; }
+    .btn-calc:active { opacity: 0.88; }
+
+    /* ── Result panel ── */
+    #result-panel {
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    #result-panel.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    /* DARF hero card */
+    .darf-card {
+      background: var(--surface);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 0.85rem 0.9rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .darf-left {}
+
+    .darf-hero-label {
+      font-size: 0.5rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.2rem;
+    }
+
+    .darf-amount {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--fg);
+      transition: color 0.3s;
+    }
+
+    .darf-amount.profit { color: var(--fg); }
+    .darf-amount.zero   { color: var(--green); }
+
+    .darf-right {
+      text-align: right;
+    }
+
+    .rent-label {
+      font-size: 0.5rem;
+      color: var(--faint);
+      margin-bottom: 0.2rem;
+    }
+
+    .rent-value {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .rent-value.pos { color: var(--green); }
+    .rent-value.neg { color: var(--red); }
+    .rent-value.neutral { color: var(--muted); }
+
+    /* Loss alert */
+    .loss-alert {
+      display: none;
+      font-size: 0.65rem;
+      color: var(--red);
+      padding: 0 0 0.5rem;
+      letter-spacing: 0.01em;
+    }
+
+    .loss-alert.visible { display: block; }
+
+    /* Result stat grids */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem 0.75rem;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .stat-label {
+      font-size: 0.48rem;
+      color: var(--faint);
+      letter-spacing: 0.05em;
+      text-transform: none;
+    }
+
+    .stat-value {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--fg);
+    }
+
+    .stat-value.pos { color: var(--green); }
+    .stat-value.neg { color: var(--red); }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>ETF · Imposto</h1>
+    <div class="header-sub">B3 · 15% sobre lucro líquido</div>
+  </div>
+  <span class="darf-badge">DARF</span>
+</header>
+
+<form id="taxForm" novalidate>
+
+  <!-- Card Carteira -->
+  <div class="card">
+    <div class="card-label">Carteira</div>
+    <div class="card-body">
+      <div class="field-grid">
+        <div class="field">
+          <label for="avgPrice">Preço médio</label>
+          <input type="number" id="avgPrice" step="0.01" min="0.01" placeholder="0,00" required>
+          <span class="err" id="avgPriceErr">Valor inválido</span>
+        </div>
+        <div class="field">
+          <label for="totalQty">Qtd em carteira</label>
+          <input type="number" id="totalQty" step="1" min="1" placeholder="0" required>
+          <span class="err" id="totalQtyErr">Qtd inválida</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card Operação -->
+  <div class="card">
+    <div class="card-label">Operação</div>
+    <div class="card-body">
+      <div class="field-grid">
+        <div class="field">
+          <label for="currentPrice">Preço atual</label>
+          <input type="number" id="currentPrice" step="0.01" min="0.01" placeholder="0,00" required>
+          <span class="err" id="currentPriceErr">Valor inválido</span>
+        </div>
+        <div class="field">
+          <label for="sellQty">Qtd a vender</label>
+          <input type="number" id="sellQty" step="1" min="1" placeholder="0" required>
+          <span class="err" id="sellQtyErr">Qtd inválida</span>
+        </div>
+      </div>
+      <div class="sell-or">ou</div>
+      <div class="field-grid single">
+        <div class="field">
+          <label for="sellValue">Valor a vender (R$)</label>
+          <input type="number" id="sellValue" step="0.01" min="0.01" placeholder="0,00">
+          <span class="hint" id="sellValueHint"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button type="submit" class="btn-calc">Calcular Imposto</button>
+
+</form>
+
+<!-- Result -->
+<section id="result-panel" style="margin-top:1.25rem">
+
+  <!-- DARF hero -->
+  <div class="darf-card">
+    <div class="darf-left">
+      <div class="darf-hero-label">DARF a pagar</div>
+      <div class="darf-amount" id="taxAmount">—</div>
+    </div>
+  </div>
+
+  <!-- Loss alert -->
+  <div class="loss-alert" id="lossAlert">
+    Prejuízo: <strong id="lossValue"></strong> — sem imposto devido
+  </div>
+
+  <!-- Card Esta venda -->
+  <div class="card">
+    <div class="card-label">Esta venda</div>
+    <div class="card-body">
+      <div class="stat-grid">
+        <div class="stat">
+          <span class="stat-label">Venda bruta</span>
+          <span class="stat-value" id="resVenda">—</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Custo das cotas</span>
+          <span class="stat-value" id="resCusto">—</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Lucro / Prejuízo</span>
+          <span class="stat-value" id="resLucro">—</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Rentabilidade</span>
+          <span class="stat-value" id="resRent">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card Carteira pós-venda -->
+  <div class="card">
+    <div class="card-label">Carteira pós-venda</div>
+    <div class="card-body">
+      <div class="stat-grid">
+        <div class="stat">
+          <span class="stat-label">Saldo restante</span>
+          <span class="stat-value" id="resSaldo">—</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Custo total</span>
+          <span class="stat-value" id="resCustoTotal">—</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Saldo líquido</span>
+          <span class="stat-value" id="resSaldoLiquido">—</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Imposto se vender tudo</span>
+          <span class="stat-value" id="resImpostoRestante">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script>
+  'use strict';
+
+  /* ── Formatting ── */
+  function formatBRL(value) {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(value);
+  }
+
+  function formatPct(value) {
+    const sign = value > 0 ? '+' : '';
+    return sign + value.toFixed(2).replace('.', ',') + '%';
+  }
+
+  /* ── Core calculation ── */
+  function calculateTax(avgPrice, totalQty, currentPrice, sellQty) {
+    const custo        = avgPrice * sellQty;
+    const venda        = currentPrice * sellQty;
+    const lucro        = venda - custo;
+    const imposto      = lucro > 0 ? lucro * 0.15 : 0;
+    const rentabilidade = (currentPrice / avgPrice - 1) * 100;
+    const qtdRestante   = totalQty - sellQty;
+    const saldoRestante = qtdRestante * currentPrice;
+    const custoTotal    = avgPrice * totalQty;
+    const lucroRestante = (currentPrice - avgPrice) * qtdRestante;
+    const impostoRestante = lucroRestante > 0 ? lucroRestante * 0.15 : 0;
+    const saldoLiquido  = saldoRestante - impostoRestante;
+    return { custo, venda, lucro, imposto, rentabilidade, saldoRestante, custoTotal, impostoRestante, saldoLiquido };
+  }
+
+  /* ── Validation ── */
+  function clearErrors() {
+    document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+    document.querySelectorAll('.err').forEach(el => el.classList.remove('visible'));
+  }
+
+  function showError(inputId, msgId) {
+    document.getElementById(inputId).classList.add('error');
+    document.getElementById(msgId).classList.add('visible');
+  }
+
+  function validateForm() {
+    clearErrors();
+    let valid = true;
+    const avgPrice     = parseFloat(document.getElementById('avgPrice').value);
+    const totalQty     = parseInt(document.getElementById('totalQty').value, 10);
+    const currentPrice = parseFloat(document.getElementById('currentPrice').value);
+    const sellQty      = parseInt(document.getElementById('sellQty').value, 10);
+
+    if (!avgPrice || avgPrice <= 0) {
+      showError('avgPrice', 'avgPriceErr');
+      valid = false;
+    }
+    if (!totalQty || totalQty < 1) {
+      showError('totalQty', 'totalQtyErr');
+      valid = false;
+    }
+    if (!currentPrice || currentPrice <= 0) {
+      showError('currentPrice', 'currentPriceErr');
+      valid = false;
+    }
+    if (!sellQty || sellQty < 1 || (totalQty >= 1 && sellQty > totalQty)) {
+      showError('sellQty', 'sellQtyErr');
+      valid = false;
+    }
+    return valid;
+  }
+
+  /* ── Render result ── */
+  function renderResult(result) {
+    const panel     = document.getElementById('result-panel');
+    const taxEl     = document.getElementById('taxAmount');
+    const lossAlert = document.getElementById('lossAlert');
+    const lossValue = document.getElementById('lossValue');
+
+    // Esta venda
+    document.getElementById('resVenda').textContent  = formatBRL(result.venda);
+    document.getElementById('resCusto').textContent  = formatBRL(result.custo);
+
+    const lucroEl = document.getElementById('resLucro');
+    lucroEl.textContent = formatBRL(result.lucro);
+    lucroEl.className = 'stat-value' + (result.lucro > 0 ? ' pos' : result.lucro < 0 ? ' neg' : '');
+
+    const rentEl = document.getElementById('resRent');
+    rentEl.textContent = formatPct(result.rentabilidade);
+    rentEl.className = 'stat-value' + (result.rentabilidade > 0 ? ' pos' : result.rentabilidade < 0 ? ' neg' : '');
+
+    // DARF
+    taxEl.textContent = formatBRL(result.imposto);
+    taxEl.className = 'darf-amount ' + (result.imposto > 0 ? 'profit' : 'zero');
+
+    // Loss alert
+    if (result.lucro < 0) {
+      lossAlert.classList.add('visible');
+      lossValue.textContent = formatBRL(Math.abs(result.lucro));
+    } else {
+      lossAlert.classList.remove('visible');
+    }
+
+    // Carteira pós-venda
+    document.getElementById('resSaldo').textContent      = formatBRL(result.saldoRestante);
+    document.getElementById('resCustoTotal').textContent = formatBRL(result.custoTotal);
+    document.getElementById('resSaldoLiquido').textContent = formatBRL(result.saldoLiquido);
+
+    const impRestEl = document.getElementById('resImpostoRestante');
+    impRestEl.textContent = formatBRL(result.impostoRestante);
+    impRestEl.className = 'stat-value' + (result.impostoRestante > 0 ? ' neg' : '');
+
+    panel.classList.add('visible');
+  }
+
+  /* ── Sell mode sync ── */
+  let sellMode = 'qty';
+
+  function syncSellFields(source) {
+    const currentPrice = parseFloat(document.getElementById('currentPrice').value);
+    const sellQtyEl    = document.getElementById('sellQty');
+    const sellValueEl  = document.getElementById('sellValue');
+    const hintEl       = document.getElementById('sellValueHint');
+
+    if (!currentPrice || currentPrice <= 0) return;
+
+    if (source === 'value') {
+      sellMode = 'value';
+      const val = parseFloat(sellValueEl.value);
+      if (!isNaN(val) && val > 0) {
+        const qty = Math.ceil(val / currentPrice);
+        sellQtyEl.value = qty;
+        sellQtyEl.classList.add('derived');
+        hintEl.textContent = qty + ' cota' + (qty !== 1 ? 's' : '');
+      } else {
+        sellQtyEl.value = '';
+        hintEl.textContent = '';
+      }
+      sellValueEl.classList.remove('derived');
+    } else {
+      sellMode = 'qty';
+      const qty = parseInt(sellQtyEl.value, 10);
+      if (!isNaN(qty) && qty > 0) {
+        sellValueEl.value = (qty * currentPrice).toFixed(2);
+        sellValueEl.classList.add('derived');
+        hintEl.textContent = '';
+      } else {
+        sellValueEl.value = '';
+        sellValueEl.classList.remove('derived');
+        hintEl.textContent = '';
+      }
+      sellQtyEl.classList.remove('derived');
+    }
+  }
+
+  document.getElementById('sellQty').addEventListener('input', () => syncSellFields('qty'));
+  document.getElementById('sellValue').addEventListener('input', () => syncSellFields('value'));
+
+  /* ── Persistence ── */
+  const STORAGE_KEY = 'etf_calc_portfolio';
+
+  function savePortfolio() {
+    const avgPrice = document.getElementById('avgPrice').value;
+    const totalQty = document.getElementById('totalQty').value;
+    if (avgPrice || totalQty) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ avgPrice, totalQty }));
+    }
+  }
+
+  function loadPortfolio() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) return;
+      const { avgPrice, totalQty } = JSON.parse(saved);
+      if (avgPrice) document.getElementById('avgPrice').value = avgPrice;
+      if (totalQty) document.getElementById('totalQty').value = totalQty;
+    } catch (_) { /* ignora JSON corrompido */ }
+  }
+
+  document.getElementById('avgPrice').addEventListener('change', savePortfolio);
+  document.getElementById('totalQty').addEventListener('change', savePortfolio);
+
+  /* ── Form submit ── */
+  document.getElementById('taxForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    const avgPrice     = parseFloat(document.getElementById('avgPrice').value);
+    const totalQty     = parseInt(document.getElementById('totalQty').value, 10);
+    const currentPrice = parseFloat(document.getElementById('currentPrice').value);
+    const sellQty      = parseInt(document.getElementById('sellQty').value, 10);
+
+    const result = calculateTax(avgPrice, totalQty, currentPrice, sellQty);
+    renderResult(result);
+  });
+
+  loadPortfolio();
+</script>
+</body>
+</html>
