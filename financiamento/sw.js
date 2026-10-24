@@ -1,4 +1,4 @@
-const CACHE_NAME = 'financiamento-v2';
+const CACHE_NAME = 'financiamento-v3';
 
 const ASSETS = [
   '/ferramentas/financiamento/',
@@ -7,7 +7,8 @@ const ASSETS = [
   '/ferramentas/financiamento/icon-192.png',
   '/ferramentas/financiamento/icon-512.png',
   'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js',
-  'https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display&display=swap',
+  '/ferramentas/assets/base.css',
+  '/ferramentas/assets/theme.js',
 ];
 
 // Install: pre-cache all assets
@@ -28,25 +29,22 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// Fetch: cache-first, fallback to network
+// Fetch: network-first, so updates show up right away; the cache only serves offline
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
 
   event.respondWith(
-    caches.match(event.request).then(cached => {
-      if (cached) return cached;
-
-      return fetch(event.request).then(response => {
-        if (response && response.status === 200) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-        }
-        return response;
-      }).catch(() => {
-        if (event.request.mode === 'navigate') {
-          return caches.match('/ferramentas/financiamento/');
-        }
-      });
-    })
+    fetch(event.request).then(response => {
+      if (response && response.status === 200) {
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+      }
+      return response;
+    }).catch(() =>
+      caches.match(event.request).then(cached =>
+        cached || (event.request.mode === 'navigate'
+          ? caches.match('/ferramentas/financiamento/')
+          : undefined))
+    )
   );
 });
