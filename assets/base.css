@@ -90,3 +90,13 @@ input:focus, select:focus { outline: none; border-color: var(--accent);
   border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer;
   white-space: nowrap; }
 .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Celular: nome do site e botão de tema na primeira linha, abas na segunda */
+nav.tabs { scrollbar-width: none; }
+nav.tabs::-webkit-scrollbar { display: none; }
+@media (max-width: 640px) {
+  header.top { gap: .5rem; padding-block: .5rem; }
+  .theme-btn { margin-left: auto; }
+  nav.tabs { order: 3; flex: 1 0 100%; margin: 0 -4px; }
+  nav.tabs a { padding: 5px 10px; }
+}
