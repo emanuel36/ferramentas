@@ -84,3 +84,9 @@ input:focus, select:focus { outline: none; border-color: var(--accent);
 .neg { color: var(--miss); }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* Botão de tema, à direita da barra */
+.theme-btn { font: 500 13px var(--font-body); color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer;
+  white-space: nowrap; }
+.theme-btn:hover { border-color: var(--accent); color: var(--accent); }
