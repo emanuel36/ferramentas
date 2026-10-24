@@ -2,10 +2,102 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="refresh" content="0; url=financiamento/">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Ferramentas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+  <style>
+    :root {
+      color-scheme: light;
+      --ground: #f4f4f5; --surface: #ffffff; --sunken: #ececef; --ink: #18181b;
+      --muted: #5c5c66; --line: #dcdce1; --accent: #3d5fa8; --accent-soft: #e7ecf6;
+      --font-display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+      --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        color-scheme: dark;
+        --ground: #131315; --surface: #1b1b1f; --sunken: #232328; --ink: #e7e7ea;
+        --muted: #a1a1aa; --line: #303037; --accent: #93aee6; --accent-soft: #232b3b;
+      }
+    }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --ground: #131315; --surface: #1b1b1f; --sunken: #232328; --ink: #e7e7ea;
+      --muted: #a1a1aa; --line: #303037; --accent: #93aee6; --accent-soft: #232b3b;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--ground); color: var(--ink);
+      font: 15px/1.6 var(--font-body); }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+
+    header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 3;
+      display: flex; align-items: center; padding: .625rem clamp(1rem, 3vw, 2rem);
+      background: var(--surface); border-bottom: 1px solid var(--line); }
+    .brand { font: 600 1.25rem var(--font-display); }
+
+    main { padding: 1.5rem clamp(1rem, 3vw, 2rem) 4rem; max-width: 1100px; margin: 0 auto; }
+    h1 { font: 600 clamp(1.6rem, 3vw, 2.2rem)/1.15 var(--font-display); margin: 0 0 .3rem; }
+    .lede { color: var(--muted); margin: 0 0 1.25rem; }
+
+    .tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem; margin: 0; padding: 0; list-style: none; }
+    .tools a { display: block; height: 100%; color: inherit; text-decoration: none;
+      background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+      overflow: hidden; transition: border-color .15s, transform .15s; }
+    .tools a:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .tools .body { padding: .75rem 1rem 1rem; }
+    .tools h2 { font: 600 1.15rem/1.25 var(--font-display); margin: 0; }
+    .tools p { margin: .2rem 0 0; color: var(--muted); font-size: 14px; }
+
+    /* Miniatura: a própria página da ferramenta, carregada a 1280px e reduzida */
+    .thumb { position: relative; overflow: hidden; aspect-ratio: 16 / 10;
+      background: var(--sunken); border-bottom: 1px solid var(--line); }
+    .thumb iframe { position: absolute; top: 0; left: 0; width: 1280px; height: 800px;
+      border: 0; transform-origin: 0 0; pointer-events: none; }
+    @media (prefers-reduced-motion: reduce) { .tools a { transition: none; } }
+  </style>
 </head>
 <body>
-  <p><a href="financiamento/">Abrir o simulador de financiamento</a></p>
+  <header class="top"><span class="brand">Ferramentas</span></header>
+  <main>
+    <h1>Ferramentas</h1>
+    <p class="lede">Calculadoras e guias de uso pessoal. Os dados ficam só neste navegador.</p>
+    <ul class="tools">
+      <li><a href="financiamento/">
+        <div class="thumb"><iframe src="financiamento/" title="Prévia do Financiamento"
+          tabindex="-1" loading="lazy"></iframe></div>
+        <div class="body">
+          <h2>Financiamento</h2>
+          <p>SAC x Price, investir ou amortizar, comparar imóveis.</p>
+        </div>
+      </a></li>
+      <li><a href="ir-etf/">
+        <div class="thumb"><iframe src="ir-etf/" title="Prévia do IR ETF"
+          tabindex="-1" loading="lazy"></iframe></div>
+        <div class="body">
+          <h2>IR ETF</h2>
+          <p>Imposto de renda na venda de cotas de ETF.</p>
+        </div>
+      </a></li>
+      <li><a href="roteiro-viagem/">
+        <div class="thumb"><iframe src="roteiro-viagem/" title="Prévia do Roteiro de viagem"
+          tabindex="-1" loading="lazy"></iframe></div>
+        <div class="body">
+          <h2>Roteiro de viagem</h2>
+          <p>Guia de bolso de uma viagem, pronto para imprimir.</p>
+        </div>
+      </a></li>
+    </ul>
+  </main>
+  <script>
+    const fit = () => document.querySelectorAll(".thumb").forEach((t) => {
+      t.firstElementChild.style.transform = `scale(${t.clientWidth / 1280})`;
+    });
+    addEventListener("resize", fit);
+    fit();
+  </script>
 </body>
 </html>
