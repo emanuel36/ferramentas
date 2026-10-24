@@ -454,6 +454,10 @@
           </div>
           <button type="button" id="btnFetch" class="btn-fetch" aria-label="Buscar cotação">↻</button>
         </div>
+        <div class="field">
+          <label for="brapiToken">Token brapi.dev</label>
+          <input type="password" id="brapiToken" placeholder="opcional" autocomplete="off" spellcheck="false">
+        </div>
       </div>
       <div class="ticker-status" id="tickerStatus"></div>
       <div class="field-grid">
@@ -721,6 +725,7 @@
 
   /* ── Persistence ── */
   const STORAGE_KEY = 'etf_calc_portfolio';
+  const TOKEN_KEY   = 'etf_brapi_token';
 
   function savePortfolio() {
     const data = {
@@ -805,13 +810,20 @@
       return;
     }
 
+    const token = (localStorage.getItem(TOKEN_KEY) ?? '').trim();
+    if (!token) {
+      statusEl.textContent = 'Informe o token da brapi para buscar a cotação.';
+      statusEl.className   = 'ticker-status err';
+      return;
+    }
+
     btnEl.classList.add('loading');
     btnEl.disabled   = true;
     statusEl.textContent = 'Buscando…';
     statusEl.className   = 'ticker-status';
 
     try {
-      const res  = await fetch(`https://brapi.dev/api/quote/${ticker}?fundamental=false&token=SEU_TOKEN_BRAPI`);
+      const res  = await fetch(`https://brapi.dev/api/quote/${ticker}?fundamental=false&token=${encodeURIComponent(token)}`);
       const data = await res.json();
       const quote = data?.results?.[0];
 
@@ -846,6 +858,17 @@
   }
 
   document.getElementById('btnFetch').addEventListener('click', fetchQuote);
+
+  /* ── Token brapi.dev: guardado só neste navegador ── */
+  const tokenEl = document.getElementById('brapiToken');
+  try { tokenEl.value = localStorage.getItem(TOKEN_KEY) ?? ''; } catch (_) {}
+  tokenEl.addEventListener('change', () => {
+    const v = tokenEl.value.trim();
+    try {
+      if (v) localStorage.setItem(TOKEN_KEY, v);
+      else localStorage.removeItem(TOKEN_KEY);
+    } catch (_) {}
+  });
   document.getElementById('tickerInput').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') { e.preventDefault(); fetchQuote(); }
   });
