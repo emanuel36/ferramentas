@@ -6,415 +6,93 @@
   <title>ETF · Imposto</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="../assets/base.css">
   <style>
+    main { max-width: 600px; }
+    .title { display: flex; align-items: center; gap: .6rem; }
+    .title h1 { margin: 0; }
 
-    :root {
-      --bg:        #F0F2F5;
-      --surface:   #FFFFFF;
-      --fg:        #1a2035;
-      --muted:     #6B7A99;
-      --faint:     #9CA3AF;
-      --border:    #E5E7EB;
-      --border-in: #D1D5DB;
-      --accent:    #2563EB;
-      --accent-bg: #F8FAFF;
-      --green:     #16a34a;
-      --green-bg:  #F0FDF4;
-      --red:       #DC2626;
-      --shadow:    0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
-    }
+    /* Cards de entrada e de resultado */
+    .card { padding: 0; overflow: hidden; }
+    .card-label { font: 600 1.05rem/1.25 var(--font-display); padding: .8rem 1rem 0;
+      margin: 0 0 .6rem; }
+    .card-body { padding: 0 1rem 1rem; }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html { font-size: 16px; }
-
-    body {
-      font-family: 'Geist Mono', ui-monospace, monospace;
-      background: var(--bg);
-      color: var(--fg);
-      min-height: 100dvh;
-      padding: 1.75rem 1.25rem calc(2rem + env(safe-area-inset-bottom, 0px));
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
-    /* ── Header ── */
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 1.5rem;
-    }
-
-    h1 {
-      font-size: 1.05rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      color: var(--fg);
-      line-height: 1.2;
-    }
-
-    .header-sub {
-      font-size: 0.6rem;
-      color: var(--muted);
-      letter-spacing: 0.03em;
-      margin-top: 0.2rem;
-    }
-
-    .darf-badge {
-      background: var(--accent);
-      color: #fff;
-      font-size: 0.5rem;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 0.2rem 0.5rem;
-      border-radius: 4px;
-      margin-top: 0.15rem;
-      flex-shrink: 0;
-    }
-
-    /* ── Cards ── */
-    .card {
-      background: var(--surface);
-      border-radius: 8px;
-      box-shadow: var(--shadow);
-      margin-bottom: 0.75rem;
-      overflow: hidden;
-    }
-
-    .card-label {
-      font-size: 0.5rem;
-      font-weight: 600;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      padding: 0.65rem 0.9rem 0;
-      margin-bottom: 0.5rem;
-    }
-
-    .card-body {
-      padding: 0 0.9rem 0.75rem;
-    }
-
-    /* ── Field grid ── */
-    .field-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.65rem 0.75rem;
-    }
-
-    .field-grid.single {
-      grid-template-columns: 1fr;
-    }
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-    }
-
-    label {
-      font-size: 0.5rem;
-      font-weight: 400;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      color: var(--faint);
-    }
-
-    input[type="number"] {
-      background: transparent;
-      border: none;
-      border-bottom: 1.5px solid var(--border-in);
-      color: var(--fg);
-      font-family: 'Geist Mono', ui-monospace, monospace;
-      font-size: 1rem;
-      font-weight: 500;
-      padding: 0.3rem 0;
-      outline: none;
-      border-radius: 0;
-      transition: border-bottom-color 0.15s;
-      -moz-appearance: textfield;
-      width: 100%;
-    }
-
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+    .field { display: flex; flex-direction: column; min-width: 0; }
+    .field-grid + .field-grid { margin-top: .75rem; }
+    input[type="number"] { -moz-appearance: textfield; }
     input[type="number"]::-webkit-inner-spin-button,
     input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-
-    input[type="number"]:focus {
-      border-bottom-color: var(--accent);
-    }
-
-    input[type="number"].error {
-      border-bottom-color: var(--red);
-    }
-
-    input[type="number"].derived {
-      color: var(--muted);
-      font-weight: 400;
-    }
-
-    .err {
-      display: none;
-      font-size: 0.55rem;
-      color: var(--red);
-      margin-top: 0.1rem;
-    }
-
+    input.error { border-color: var(--miss); box-shadow: 0 0 0 3px var(--miss-soft); }
+    input.derived { color: var(--muted); background: var(--sunken); }
+    .err { display: none; font-size: 12.5px; color: var(--miss); margin-top: .2rem; }
     .err.visible { display: block; }
+    .hint { font-size: 12.5px; color: var(--muted); min-height: 1.2em; margin-top: .2rem; }
 
-    .hint {
-      font-size: 0.55rem;
-      color: var(--faint);
-      min-height: 0.85rem;
-    }
 
-    /* ── Sell-or separator ── */
-    .sell-or {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      margin: 0.5rem 0;
-      color: var(--faint);
-      font-size: 0.55rem;
-    }
+    .btn-calc { display: block; width: 100%; padding: .7rem 1rem; margin: 0 0 1.25rem;
+      font: 600 15px var(--font-body); color: var(--surface); background: var(--accent);
+      border: 1px solid var(--accent); border-radius: 8px; cursor: pointer; }
+    .btn-calc:hover { filter: brightness(1.08); }
 
-    .sell-or::before,
-    .sell-or::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
+    /* Resultado: aparece depois de calcular */
+    #result-panel { opacity: 0; transform: translateY(8px); pointer-events: none;
+      transition: opacity .3s ease, transform .3s ease; }
+    #result-panel.visible { opacity: 1; transform: none; pointer-events: auto; }
 
-    /* ── Button ── */
-    .btn-calc {
-      display: block;
-      width: 100%;
-      padding: 0.85rem 1rem;
-      margin-top: 0.75rem;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-family: 'Geist Mono', ui-monospace, monospace;
-      font-size: 0.7rem;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background 0.15s, opacity 0.15s;
-    }
-
-    .btn-calc:hover  { background: #1d4ed8; }
-    .btn-calc:active { opacity: 0.88; }
-
-    /* ── Result panel ── */
-    #result-panel {
-      opacity: 0;
-      transform: translateY(8px);
-      pointer-events: none;
-      transition: opacity 0.3s ease, transform 0.3s ease;
-    }
-
-    #result-panel.visible {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-
-    /* DARF hero card */
-    .darf-card {
-      background: var(--surface);
-      border-radius: 8px;
-      box-shadow: var(--shadow);
-      padding: 0.85rem 0.9rem;
-      margin-bottom: 0.75rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .darf-left {}
-
-    .darf-hero-label {
-      font-size: 0.5rem;
-      font-weight: 600;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 0.2rem;
-    }
-
-    .darf-amount {
-      font-size: 1.75rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1;
-      color: var(--fg);
-      transition: color 0.3s;
-    }
-
-    .darf-amount.profit { color: var(--red); }
-    .darf-amount.zero   { color: var(--green); }
-
-    .darf-right {
-      text-align: right;
-    }
-
-    .rent-label {
-      font-size: 0.5rem;
-      color: var(--faint);
-      margin-bottom: 0.2rem;
-    }
-
-    .rent-value {
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-    }
-
-    .rent-value.pos { color: var(--green); }
-    .rent-value.neg { color: var(--red); }
-    .rent-value.neutral { color: var(--muted); }
-
-    /* Loss alert */
-    .loss-alert {
-      display: none;
-      font-size: 0.65rem;
-      color: var(--red);
-      padding: 0 0 0.5rem;
-      letter-spacing: 0.01em;
-    }
-
+    .darf-card { background: var(--surface); border: 1px solid var(--line);
+      border-top: 4px solid var(--accent); border-radius: 10px; padding: .9rem 1rem;
+      margin: 0 0 1rem; }
+    .darf-hero-label { font-size: 12.5px; color: var(--muted); }
+    .darf-amount { font: 600 2.2rem/1.1 var(--font-display); font-variant-numeric: tabular-nums; }
+    .darf-amount.profit { color: var(--miss); }
+    .darf-amount.zero { color: var(--ok); }
+    .loss-alert { display: none; margin: 0 0 1rem; padding: .5rem .8rem; border-radius: 8px;
+      font-size: 14px; color: var(--miss); background: var(--miss-soft); }
     .loss-alert.visible { display: block; }
 
-    /* Result stat grids */
-    .stat-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.5rem 0.75rem;
-    }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line);
+      border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+    .stat { display: flex; flex-direction: column; padding: .6rem .8rem;
+      background: var(--surface); }
+    .stat-label { font-size: 12.5px; color: var(--muted); }
+    .stat-value { font: 600 1.1rem var(--font-display); font-variant-numeric: tabular-nums; }
+    .stat-value.pos { color: var(--ok); }
+    .stat-value.neg { color: var(--miss); }
 
-    .stat {
-      display: flex;
-      flex-direction: column;
-      gap: 0.15rem;
-    }
+    .stacked-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden;
+      background: var(--sunken); margin: .9rem 0 .4rem; }
+    .bar-seg { transition: flex .4s ease; min-width: 0; }
+    .bar-cost, .dot-cost { background: var(--accent); }
+    .bar-profit, .dot-profit { background: var(--ok); }
+    .bar-tax, .dot-tax { background: var(--miss); }
+    .bar-legend { display: flex; gap: 1rem; font-size: 12.5px; color: var(--muted); }
+    .legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 2px;
+      margin-right: .35rem; vertical-align: middle; }
 
-    .stat-label {
-      font-size: 0.48rem;
-      color: var(--faint);
-      letter-spacing: 0.05em;
-      text-transform: none;
-    }
-
-    .stat-value {
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--fg);
-    }
-
-    .stat-value.pos { color: var(--green); }
-    .stat-value.neg { color: var(--red); }
-
-    /* ── Stacked bar chart ── */
-    .stacked-bar {
-      display: flex;
-      height: 6px;
-      border-radius: 3px;
-      overflow: hidden;
-      background: var(--border);
-      margin: 0.65rem 0 0.3rem;
-    }
-    .bar-seg { transition: flex 0.4s ease; min-width: 0; }
-    .bar-cost   { background: var(--accent); }
-    .bar-profit { background: var(--green); }
-    .bar-tax    { background: var(--red); }
-
-    .bar-legend {
-      display: flex;
-      gap: 0.75rem;
-      font-size: 0.45rem;
-      color: var(--faint);
-      letter-spacing: 0.05em;
-    }
-    .legend-dot {
-      display: inline-block;
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      margin-right: 0.2rem;
-      vertical-align: middle;
-    }
-    .dot-cost   { background: var(--accent); }
-    .dot-profit { background: var(--green); }
-    .dot-tax    { background: var(--red); }
-
-  /* ── Ticker fetch ── */
-  .ticker-row {
-    display: flex;
-    align-items: flex-end;
-    gap: 0.5rem;
-  }
-  .ticker-field { flex: 1; }
-  .ticker-field input {
-    background: transparent;
-    border: none;
-    border-bottom: 1.5px solid var(--border-in);
-    color: var(--fg);
-    font-family: 'Geist Mono', ui-monospace, monospace;
-    font-size: 1rem;
-    font-weight: 500;
-    padding: 0.3rem 0;
-    outline: none;
-    width: 100%;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    -moz-appearance: textfield;
-  }
-  .ticker-field input:focus { border-bottom-color: var(--accent); }
-
-  .btn-fetch {
-    background: var(--accent-bg);
-    border: 1.5px solid var(--border-in);
-    color: var(--accent);
-    font-size: 1rem;
-    border-radius: 6px;
-    width: 2rem;
-    height: 2rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: background 0.15s, border-color 0.15s;
-    padding-bottom: 0.3rem;
-  }
-  .btn-fetch:hover  { background: var(--border); border-color: var(--accent); }
-  .btn-fetch:active { opacity: 0.8; }
-  .btn-fetch.loading { opacity: 0.5; cursor: not-allowed; }
-
-  .ticker-status {
-    font-size: 0.52rem;
-    min-height: 0.85rem;
-    margin-bottom: 0.4rem;
-    letter-spacing: 0.02em;
-  }
-  .ticker-status.ok  { color: var(--green); }
-  .ticker-status.err { color: var(--red); }
-
+    @media (max-width: 380px) { .field-grid, .stat-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 
-<header>
-  <div>
-    <h1>ETF · Imposto</h1>
-    <div class="header-sub">15% sobre lucro líquido</div>
-  </div>
-  <span class="darf-badge">DARF</span>
+<header class="top">
+  <a class="brand" href="../">Ferramentas</a>
+  <nav class="tabs" aria-label="Ferramentas">
+    <a href="../">Início</a>
+    <a href="../financiamento/">Financiamento</a>
+    <a href="./" aria-current="page">IR ETF</a>
+    <a href="../roteiro-viagem/">Roteiro</a>
+  </nav>
 </header>
+
+<main>
+<div class="title">
+  <h1>ETF · Imposto</h1>
+  <span class="badge">DARF</span>
+</div>
+<p class="lede">15% sobre lucro líquido</p>
 
 <form id="taxForm" novalidate>
 
@@ -442,24 +120,12 @@
     <div class="card-label">Operação</div>
     <div class="card-body">
       <div class="field-grid">
-        <div class="field ticker-field">
-          <label for="tickerInput">Ticker</label>
-          <input type="text" id="tickerInput" placeholder="SPXI11" autocomplete="off" autocapitalize="characters" spellcheck="false">
-        </div>
-        <div class="ticker-row">
-          <div class="field ticker-field">
-            <label for="currentPrice">Preço atual</label>
-            <input type="number" id="currentPrice" step="0.01" min="0.01" placeholder="0,00" required>
-            <span class="err" id="currentPriceErr">Valor inválido</span>
-          </div>
-          <button type="button" id="btnFetch" class="btn-fetch" aria-label="Buscar cotação">↻</button>
-        </div>
         <div class="field">
-          <label for="brapiToken">Token brapi.dev</label>
-          <input type="password" id="brapiToken" placeholder="opcional" autocomplete="off" spellcheck="false">
+          <label for="currentPrice">Preço atual</label>
+          <input type="number" id="currentPrice" step="0.01" min="0.01" placeholder="0,00" required>
+          <span class="err" id="currentPriceErr">Valor inválido</span>
         </div>
       </div>
-      <div class="ticker-status" id="tickerStatus"></div>
       <div class="field-grid">
         <div class="field">
           <label for="sellQty">Qtd a vender</label>
@@ -556,6 +222,7 @@
   </div>
 
 </section>
+</main>
 
 <script>
   'use strict';
@@ -725,19 +392,14 @@
 
   /* ── Persistence ── */
   const STORAGE_KEY = 'etf_calc_portfolio';
-  const TOKEN_KEY   = 'etf_brapi_token';
 
   function savePortfolio() {
     const data = {
       avgPrice:     document.getElementById('avgPrice').value,
       totalQty:     document.getElementById('totalQty').value,
-      ticker:       document.getElementById('tickerInput').value,
       currentPrice: document.getElementById('currentPrice').value,
       sellQty:      document.getElementById('sellQty').value,
       sellValue:    document.getElementById('sellValue').value,
-      quoteTs:      localStorage.getItem(STORAGE_KEY)
-                      ? (JSON.parse(localStorage.getItem(STORAGE_KEY)).quoteTs ?? null)
-                      : null,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }
@@ -749,18 +411,15 @@
       const d = JSON.parse(saved);
       if (d.avgPrice)     document.getElementById('avgPrice').value     = d.avgPrice;
       if (d.totalQty)     document.getElementById('totalQty').value     = d.totalQty;
-      if (d.ticker)       document.getElementById('tickerInput').value  = d.ticker;
       if (d.currentPrice) document.getElementById('currentPrice').value = d.currentPrice;
       if (d.sellQty)      document.getElementById('sellQty').value      = d.sellQty;
       if (d.sellValue)    document.getElementById('sellValue').value    = d.sellValue;
-      if (d.quoteTs)      updateQuoteAge(d.quoteTs);
     } catch (_) { /* ignora JSON corrompido */ }
   }
 
   ['avgPrice','totalQty','currentPrice','sellQty','sellValue'].forEach(id => {
     document.getElementById(id).addEventListener('change', savePortfolio);
   });
-  document.getElementById('tickerInput').addEventListener('change', savePortfolio);
 
   /* ── Form submit ── */
   document.getElementById('taxForm').addEventListener('submit', (e) => {
@@ -774,103 +433,6 @@
 
     const result = calculateTax(avgPrice, totalQty, currentPrice, sellQty);
     renderResult(result);
-  });
-
-  /* ── Quote age display ── */
-  let quoteAgeInterval = null;
-
-  function updateQuoteAge(ts) {
-    const statusEl = document.getElementById('tickerStatus');
-    if (!statusEl.classList.contains('ok')) return;
-    const diff = Math.floor((Date.now() - ts) / 1000);
-    let label;
-    if (diff < 60)        label = `há ${diff}s`;
-    else if (diff < 3600) label = `há ${Math.floor(diff / 60)}min`;
-    else                  label = `há ${Math.floor(diff / 3600)}h`;
-    // preserve the asset name part before " · "
-    const parts = statusEl.textContent.split(' · ');
-    statusEl.textContent = `${parts[0]} · ${label}`;
-  }
-
-  function startQuoteAgeTimer(ts) {
-    if (quoteAgeInterval) clearInterval(quoteAgeInterval);
-    quoteAgeInterval = setInterval(() => updateQuoteAge(ts), 30000);
-  }
-
-  /* ── Quote fetch (brapi.dev) ── */
-  async function fetchQuote() {
-    const ticker   = document.getElementById('tickerInput').value.trim().toUpperCase();
-    const statusEl = document.getElementById('tickerStatus');
-    const btnEl    = document.getElementById('btnFetch');
-    const priceEl  = document.getElementById('currentPrice');
-
-    if (!ticker) {
-      statusEl.textContent = 'Informe o ticker (ex: BOVA11)';
-      statusEl.className   = 'ticker-status err';
-      return;
-    }
-
-    const token = (localStorage.getItem(TOKEN_KEY) ?? '').trim();
-    if (!token) {
-      statusEl.textContent = 'Informe o token da brapi para buscar a cotação.';
-      statusEl.className   = 'ticker-status err';
-      return;
-    }
-
-    btnEl.classList.add('loading');
-    btnEl.disabled   = true;
-    statusEl.textContent = 'Buscando…';
-    statusEl.className   = 'ticker-status';
-
-    try {
-      const res  = await fetch(`https://brapi.dev/api/quote/${ticker}?fundamental=false&token=${encodeURIComponent(token)}`);
-      const data = await res.json();
-      const quote = data?.results?.[0];
-
-      if (!quote || quote.regularMarketPrice == null) {
-        throw new Error('Ativo não encontrado');
-      }
-
-      const now = Date.now();
-      priceEl.value        = quote.regularMarketPrice.toFixed(2);
-      priceEl.classList.remove('derived');
-      statusEl.textContent = `${quote.shortName ?? ticker} · há 0s`;
-      statusEl.className   = 'ticker-status ok';
-      // persist timestamp
-      try {
-        const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}');
-        stored.quoteTs = now;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
-      } catch (_) {}
-      startQuoteAgeTimer(now);
-      // resync sell value field if qty already filled
-      syncSellFields('qty');
-      savePortfolio();
-    } catch (err) {
-      statusEl.textContent = err.message === 'Ativo não encontrado'
-        ? 'Ticker não encontrado'
-        : 'Erro ao buscar — verifique a conexão';
-      statusEl.className = 'ticker-status err';
-    } finally {
-      btnEl.classList.remove('loading');
-      btnEl.disabled = false;
-    }
-  }
-
-  document.getElementById('btnFetch').addEventListener('click', fetchQuote);
-
-  /* ── Token brapi.dev: guardado só neste navegador ── */
-  const tokenEl = document.getElementById('brapiToken');
-  try { tokenEl.value = localStorage.getItem(TOKEN_KEY) ?? ''; } catch (_) {}
-  tokenEl.addEventListener('change', () => {
-    const v = tokenEl.value.trim();
-    try {
-      if (v) localStorage.setItem(TOKEN_KEY, v);
-      else localStorage.removeItem(TOKEN_KEY);
-    } catch (_) {}
-  });
-  document.getElementById('tickerInput').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') { e.preventDefault(); fetchQuote(); }
   });
 
   loadPortfolio();
