@@ -727,176 +727,6 @@
             background: rgba(30, 30, 30, 1);
         }
 
-        /* Print styles */
-        @media print {
-            * {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-            
-            @page {
-                margin: 0;
-                size: auto;
-            }
-            
-            body, html {
-                overflow: visible !important;
-                height: auto !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                background: transparent !important;
-            }
-            
-            .slides-container {
-                display: block !important;
-                overflow: visible !important;
-                height: auto !important;
-            }
-            
-            .slide {
-                page-break-after: always;
-                page-break-inside: avoid;
-                min-height: auto;
-                height: auto;
-                padding: 20px 0;
-                display: block;
-                margin: 0 !important;
-                background: transparent !important;
-                width: 100% !important;
-                max-width: none !important;
-                flex-shrink: 0 !important;
-            }
-            
-            .slide:last-child {
-                page-break-after: auto;
-                margin-bottom: 0 !important;
-                padding-bottom: 0 !important;
-                max-height: 100vh !important;
-                overflow: hidden !important;
-            }
-            
-            .slide:last-child .content {
-                margin-bottom: 0 !important;
-                padding-bottom: 0 !important;
-            }
-            
-            .slide:last-child ~ *,
-            .slide::after,
-            .slide::before,
-            .nav-button,
-            .slide-indicators,
-            .control-buttons {
-                display: none !important;
-            }
-            
-            .content {
-                background: rgba(30, 30, 30, 1) !important;
-                color: #ffffff !important;
-                box-shadow: none !important;
-                max-height: none;
-                height: auto;
-                overflow: visible;
-            }
-            
-            .scroll-list {
-                max-height: none;
-                overflow: visible;
-            }
-            
-            .title-emoji,
-            .section-title,
-            .day-header,
-            .summary-title,
-            .chart-title {
-                color: #ffffff !important;
-            }
-            
-            .bonus-title,
-            .summary-label,
-            .bar-label {
-                color: #cccccc !important;
-            }
-            
-            .travel-table {
-                background: rgba(40, 40, 40, 0.96) !important;
-            }
-            
-            .travel-table th {
-                background: #2d2d2d !important;
-                color: #ffffff !important;
-            }
-            
-            .travel-table td {
-                color: #cccccc !important;
-            }
-            
-            .travel-chart,
-            .travel-summary {
-                background: rgba(30, 30, 30, 0.5) !important;
-            }
-            
-            .day-header {
-                border-bottom: 2px solid #495057 !important;
-            }
-            
-            .bonus-section {
-                border-top: 2px solid #495057 !important;
-            }
-            
-            ul li {
-                color: #ffffff !important;
-                background: rgba(255,255,255,0.05) !important;
-            }
-            
-            .bar-fill {
-                background: linear-gradient(90deg, #10b981 0%, #34d399 100%) !important;
-            }
-            
-            .bar-fill.travel-bar {
-                background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%) !important;
-            }
-            
-            .bonus-tag {
-                background: linear-gradient(135deg, #495057 0%, #6c757d 100%) !important;
-                color: white !important;
-            }
-            
-            .time-badge-icon {
-                background: rgba(59, 130, 246, 0.25) !important;
-                color: white !important;
-            }
-            
-            .time-badge-icon.schedule {
-                background: rgba(251, 191, 36, 0.25) !important;
-                color: #ffffff !important;
-            }
-            
-            .time-badge-minimal-hover {
-                background: rgba(34, 197, 94, 0.25) !important;
-                color: white !important;
-            }
-            
-            .time-badge-minimal-hover.departure {
-                background: rgba(239, 68, 68, 0.25) !important;
-                color: white !important;
-            }
-            
-            .time-item {
-                background: repeating-linear-gradient(45deg, rgba(34, 197, 94, 0.05), rgba(34, 197, 94, 0.05) 2px, rgba(34, 197, 94, 0.08) 2px, rgba(34, 197, 94, 0.08) 4px) !important;
-                border: 1px solid rgba(34, 197, 94, 0.3) !important;
-            }
-            
-            .time-item.departure {
-                background: repeating-linear-gradient(45deg, rgba(239, 68, 68, 0.05), rgba(239, 68, 68, 0.05) 2px, rgba(239, 68, 68, 0.08) 2px, rgba(239, 68, 68, 0.08) 4px) !important;
-                border: 1px solid rgba(239, 68, 68, 0.3) !important;
-            }
-            
-            .next-day-indicator {
-                background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%) !important;
-                color: white !important;
-            }
-        }
-
         /* Flex row helper for list items with time badges */
         .flex-row {
             display: flex;
@@ -927,9 +757,6 @@
 <div class="control-buttons">
     <button class="control-btn" id="themeToggle" onclick="toggleTheme()" title="Alternar tema">
         <span id="themeIcon">🌙</span>
-    </button>
-    <button class="control-btn" id="exportBtn" onclick="exportToPDF()" title="Exportar para PDF">
-        📄
     </button>
 </div>
 
@@ -1672,18 +1499,6 @@ function toggleTheme() {
         body.classList.add('light-theme');
         themeIcon.textContent = '';
     }
-}
-
-function exportToPDF() {
-    // Verificar se está em um dispositivo iOS
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    
-    if (isIOS) {
-        alert('Para salvar como PDF no iPhone:\n\n1. Toque em "Compartilhar" (ícone de quadrado com seta)\n2. Role para baixo e toque em "Imprimir"\n3. Pinçar para zoom na prévia\n4. Toque em "Compartilhar" novamente\n5. Salvar como "Arquivo" ou "PDF"');
-    }
-    
-    // Usar a API de impressão do navegador
-    window.print();
 }
 </script>
 </body>
