@@ -29,7 +29,9 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+    <link rel="stylesheet" href="../assets/base.css">
+    <script src="../assets/theme.js"></script>
     <style>
         /* CONFIGURAÇÃO BASE IPHONE */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
@@ -750,13 +752,93 @@
         }
 
         </style>
+    <style>
+        /* Visual do site (assets/base.css) aplicado ao carrossel: mesmas cores, fontes e
+           cartões das outras páginas. O formato da página continua o mesmo. */
+        body, html { background: var(--ground); color: var(--ink); font-family: var(--font-body); }
+        .slides-container * { font-family: var(--font-body); }
+
+        .content { background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+            box-shadow: none; }
+        h2, .title-emoji { color: var(--ink); font-family: var(--font-display); font-weight: 600; }
+        .table-title { color: var(--ink); font-family: var(--font-display); font-size: 15px; }
+
+        .date-pill { background: var(--accent-soft); color: var(--accent); border-radius: 6px;
+            letter-spacing: .03em; }
+
+        ul li { background: var(--sunken); color: var(--ink); border-radius: 6px; }
+        ul li:hover { transform: none; box-shadow: none; }
+        ul li:not(.time-item) { border-left: 3px solid var(--line); }
+        .sub-item { background: var(--surface); color: var(--muted); }
+        .time-item { background: var(--ok-soft); border: 1px solid var(--ok); color: var(--ink); }
+        .time-item.departure { background: var(--miss-soft); border-color: var(--miss); }
+
+        .time-badge-icon, .time-badge-minimal-hover, .time-badge-inline, .time-cell, .day-cell,
+        .city-code, .bar-label, .bar-value { font-family: var(--font-mono) !important; }
+        .time-badge-icon { background: var(--accent-soft); color: var(--accent); font-weight: 500; }
+        .time-badge-icon.schedule { background: var(--warn-soft); color: var(--warn); }
+        .time-badge-minimal-hover, .time-badge-inline { background: var(--ok-soft); color: var(--ok);
+            font-weight: 500; }
+        .time-badge-minimal-hover.departure, .time-badge-inline.departure {
+            background: var(--miss-soft); color: var(--miss); }
+
+        .bonus-section { border-top: 1px solid var(--line); }
+        .bonus-title { color: var(--muted); }
+        .bonus-tag { background: var(--sunken); color: var(--ink); border: 1px solid var(--line); }
+
+        .travel-table { background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+            border-collapse: separate; border-spacing: 0; }
+        .travel-table th { background: var(--sunken); color: var(--muted); }
+        .travel-table td, .travel-table tr:nth-child(even) td { background: transparent;
+            color: var(--ink); border-bottom: 1px solid var(--line); }
+        .travel-table tbody tr:last-child td { border-bottom: 0; }
+        .time-cell { color: var(--muted); background: none !important; font-weight: 500; }
+        .day-cell { color: var(--accent); background: none !important; }
+        .hotels-table tr:last-child td { border-top: 2px solid var(--muted); font-weight: 600; }
+
+        .scroll-list::-webkit-scrollbar-track { background: var(--sunken); }
+        .scroll-list::-webkit-scrollbar-thumb { background: var(--line); }
+
+        .indicator { background: var(--line); }
+        .indicator.active { background: var(--accent); }
+        .nav-button { background: color-mix(in srgb, var(--surface) 55%, transparent);
+            border: 1px solid var(--line); color: var(--ink); opacity: .6; }
+        .nav-button:hover { background: var(--sunken); opacity: 1; }
+        .control-btn, body.light-theme .control-btn { background: var(--surface); color: var(--ink);
+            border: 1px solid var(--line); box-shadow: none; font-size: 22px; }
+        .control-btn:hover, body.light-theme .control-btn:hover { background: var(--sunken);
+            transform: none; }
+
+        /* Cada cidade ocupa a tela inteira e rola por inteiro (sem caixa interna).
+           Cidade curta: o cartão fica centralizado; longa: começa no topo e rola. */
+        .slide { height: 100dvh; align-items: flex-start; overflow-y: auto; overscroll-behavior: contain;
+            padding: 16px 0 calc(84px + env(safe-area-inset-bottom, 0px)); }
+        .content { max-height: none; min-height: 0; margin-block: auto; }
+        .bonus-section { margin-top: 12px; }
+
+        /* Fundo do rodapé: o texto que passa por baixo some antes dos botões */
+        body::after { content: ""; position: fixed; left: 0; right: 0; bottom: 0; z-index: 99;
+            height: calc(76px + env(safe-area-inset-bottom, 0px)); pointer-events: none;
+            background: linear-gradient(to bottom, transparent, var(--ground) 40%); }
+        .scroll-list { flex: none; max-height: none; overflow: visible; padding-right: 0; }
+
+        /* Rodapé fixo: ‹ bolinhas tema › — fora do conteúdo */
+        .nav-button { top: auto; bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+            transform: none; width: 44px; height: 44px; opacity: .9; font-size: 18px; }
+        .nav-button.prev { left: 5vw; }
+        .nav-button.next { right: 5vw; }
+        .slide-indicators { bottom: calc(32px + env(safe-area-inset-bottom, 0px)); }
+        .control-buttons { bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+            right: calc(5vw + 52px); }
+        .control-btn { width: 44px; height: 44px; font-size: 18px; }
+    </style>
 </head>
 <body>
 
 <!-- Botões de controle -->
 <div class="control-buttons">
     <button class="control-btn" id="themeToggle" onclick="toggleTheme()" title="Alternar tema">
-        <span id="themeIcon">🌙</span>
+        <span id="themeIcon"></span>
     </button>
 </div>
 
@@ -1488,18 +1570,21 @@ container.addEventListener('scroll', () => {
     }
 });
 
-function toggleTheme() {
-    const body = document.body;
-    const themeIcon = document.getElementById('themeIcon');
-    
-    if (body.classList.contains('light-theme')) {
-        body.classList.remove('light-theme');
-        themeIcon.textContent = '🌙';
-    } else {
-        body.classList.add('light-theme');
-        themeIcon.textContent = '';
-    }
+// Mesmo tema das outras páginas do site (escuro por padrão, escolha guardada no navegador)
+function themeIconUpdate() {
+    document.getElementById('themeIcon').textContent =
+        document.documentElement.dataset.theme === 'dark' ? '☀' : '☾';
 }
+
+function toggleTheme() {
+    const tema = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem('ferramentas.tema', tema); } catch (_) {}
+    document.documentElement.dataset.theme = tema;
+    themeIconUpdate();
+}
+
+themeIconUpdate();
+addEventListener('temachange', themeIconUpdate);
 </script>
 </body>
 </html>
