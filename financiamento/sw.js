@@ -1,11 +1,11 @@
-const CACHE_NAME = 'financiamento-v1';
+const CACHE_NAME = 'financiamento-v2';
 
 const ASSETS = [
-  '/simulador_financiamento/',
-  '/simulador_financiamento/index.html',
-  '/simulador_financiamento/manifest.json',
-  '/simulador_financiamento/icon-192.png',
-  '/simulador_financiamento/icon-512.png',
+  '/ferramentas/financiamento/',
+  '/ferramentas/financiamento/index.html',
+  '/ferramentas/financiamento/manifest.json',
+  '/ferramentas/financiamento/icon-192.png',
+  '/ferramentas/financiamento/icon-512.png',
   'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js',
   'https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display&display=swap',
 ];
@@ -44,7 +44,7 @@ self.addEventListener('fetch', event => {
         return response;
       }).catch(() => {
         if (event.request.mode === 'navigate') {
-          return caches.match('/simulador_financiamento/');
+          return caches.match('/ferramentas/financiamento/');
         }
       });
     })

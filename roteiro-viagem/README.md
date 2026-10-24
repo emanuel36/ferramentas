@@ -4,7 +4,7 @@ Sistema para gerar guias de viagem personalizados com roteiros interativos em HT
 
 ## Estrutura do Projeto
 
-- `roteiro.html` - Arquivo HTML com o roteiro interativo da viagem (inclui botão de exportação)
+- `index.html` - Arquivo HTML com o roteiro interativo da viagem (inclui botão de exportação)
 - `remove_margens.py` - Script Python para processar o HTML exportado e remover margens desnecessárias
 
 ## Como Usar
@@ -15,7 +15,7 @@ Sistema para gerar guias de viagem personalizados com roteiros interativos em HT
 
 ### Passos
 
-1. Abra o arquivo `roteiro.html` no navegador.
+1. Abra o arquivo `index.html` no navegador.
 2. Exporte o roteiro usando o botão.
    - No arquivo HTML aberto, clique no botão "Exportar"
    - Salve o arquivo HTML exportado
