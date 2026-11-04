@@ -10,7 +10,7 @@ navegador: não há servidor nem conta.
 |---|---|---|
 | **Financiamento** | Simula financiamento imobiliário em SAC e Price, compara com investir o dinheiro e compara imóveis. | [abrir](https://emanuel36.github.io/ferramentas/financiamento/) |
 | **IR ETF** | Calcula o imposto de renda na venda de cotas de ETF. | [abrir](https://emanuel36.github.io/ferramentas/ir-etf/) |
-| **Roteiro de viagem** | Guia de bolso de uma viagem, para consultar no celular. | [abrir](https://emanuel36.github.io/ferramentas/roteiro-viagem/) |
+| **Roteiro de viagem** | Guia de bolso de uma viagem, para consultar no celular, com câmbio, clima e feriados de cada cidade. | [abrir](https://emanuel36.github.io/ferramentas/roteiro-viagem/) |
 
 O endereço principal abre uma página com uma prévia de cada ferramenta para escolher.
 

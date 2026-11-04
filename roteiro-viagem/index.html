@@ -831,6 +831,20 @@
         .control-buttons { bottom: calc(14px + env(safe-area-inset-bottom, 0px));
             right: calc(5vw + 52px); }
         .control-btn { width: 44px; height: 44px; font-size: 18px; }
+
+        /* Moeda, clima e feriados: preenchidos pelo script a partir de data-moeda,
+           data-pais, data-regiao e data-dia */
+        .slide[data-moeda] h2 { display: flex; align-items: center; gap: 8px; }
+        .selo-moeda { margin-left: auto; display: inline-flex; align-items: baseline; gap: 6px;
+            padding: 3px 9px; border-radius: 6px; background: var(--sunken); color: var(--ink);
+            border: 1px solid var(--line); font: 500 13px var(--font-mono); white-space: nowrap; }
+        .selo-moeda small { color: var(--muted); font-size: 11px; }
+        .date-pill[data-dia] { justify-content: space-between; gap: 8px; }
+        .date-pill[data-dia] > span:first-child { white-space: nowrap; }
+        .clima-dia { font: 500 12px var(--font-mono); text-align: right; }
+        .clima-dia small { color: var(--muted); font-size: 11px; white-space: nowrap; }
+        .date-pill.feriado { background: var(--warn-soft); color: var(--warn); }
+        .feriado-nome { font-size: 12px; color: var(--warn); margin: 0 0 4px 4px; }
     </style>
 </head>
 <body>
@@ -1004,10 +1018,10 @@
 </section>
 
 <!-- Slide 1: Madrid -->
-<section class="slide">
+<section class="slide" data-moeda="EUR" data-pais="ES">
     <div class="content">
         <h2>Madrid <span class="flag">🇪🇸</span></h2>
-        <div class="date-pill"><span>TER 10</span></div>
+        <div class="date-pill" data-dia="2026-11-10"><span>TER 10</span></div>
         <div class="scroll-list">
             <ul>
                 <li class="time-item">
@@ -1033,11 +1047,11 @@
 </section>
 
 <!-- Slide 2: Bruxelas -->
-<section class="slide">
+<section class="slide" data-moeda="EUR" data-pais="BE">
     <div class="content">
         <h2>Bruxelas <span class="flag">🇧🇪</span></h2>
         <div class="scroll-list">
-            <div class="date-pill"><span>TER 10</span></div>
+            <div class="date-pill" data-dia="2026-11-10"><span>TER 10</span></div>
             <ul class="compact">
                 <li class="time-item">
                     <span>Chegada</span>
@@ -1045,7 +1059,7 @@
                 </li>
                 <li>Jantar no La Terrasse de Bruxelles <span class="time-badge-icon schedule">21:30</span></li>
             </ul>
-            <div class="date-pill"><span>QUA 11</span></div>
+            <div class="date-pill" data-dia="2026-11-11"><span>QUA 11</span></div>
             <ul class="compact">
                 <li>Palais de Justice</li>
                 <li>Place Royale</li>
@@ -1071,7 +1085,7 @@
                     </div>
                 </li>
             </ul>
-            <div class="date-pill"><span>QUI 12</span></div>
+            <div class="date-pill" data-dia="2026-11-12"><span>QUI 12</span></div>
             <ul class="compact">
                 <li class="time-item departure">
                     <span>Partida</span>
@@ -1087,11 +1101,11 @@
 </section>
 
 <!-- Slide 3: Praga -->
-<section class="slide">
+<section class="slide" data-moeda="CZK" data-pais="CZ">
     <div class="content">
         <h2>Praga <span class="flag">🇨🇿</span></h2>
         <div class="scroll-list">
-            <div class="date-pill"><span>QUI 12</span></div>
+            <div class="date-pill" data-dia="2026-11-12"><span>QUI 12</span></div>
             <ul>
                 <li class="time-item">
                     <span>Chegada</span>
@@ -1117,7 +1131,7 @@
                     </div>
                 </li>
             </ul>
-            <div class="date-pill"><span>SEX 13</span></div>
+            <div class="date-pill" data-dia="2026-11-13"><span>SEX 13</span></div>
             <ul>
                 <li>
                     <div class="flex-row">
@@ -1146,7 +1160,7 @@
                     </div>
                 </li>
             </ul>
-            <div class="date-pill"><span>SAB 14</span></div>
+            <div class="date-pill" data-dia="2026-11-14"><span>SAB 14</span></div>
             <ul>
                 <li>Prašná brána</li>
                 <li>Museu Nacional de Praga</li>
@@ -1170,11 +1184,11 @@
 </section>
 
 <!-- Slide 4: Viena -->
-<section class="slide">
+<section class="slide" data-moeda="EUR" data-pais="AT" data-regiao="AT-9">
     <div class="content">
         <h2>Viena <span class="flag">🇦🇹</span></h2>
         <div class="scroll-list">
-            <div class="date-pill"><span>SAB 14</span></div>
+            <div class="date-pill" data-dia="2026-11-14"><span>SAB 14</span></div>
             <ul>
                 <li class="time-item">
                     <span>Chegada</span>
@@ -1182,7 +1196,7 @@
                 </li>
                 <li>Jantar no Kebap Art <span class="time-badge-icon schedule">20:30</span></li>
             </ul>
-            <div class="date-pill"><span>DOM 15</span></div>
+            <div class="date-pill" data-dia="2026-11-15"><span>DOM 15</span></div>
             <ul>
                 <li>Naschmarkt</li>
                 <li>Vienna Opera House</li>
@@ -1196,7 +1210,7 @@
                 <li>Palacio Schönbrunn</li>
                 <li>City tour <span class="time-badge-icon schedule">11h</span></li>
             </ul>
-            <div class="date-pill"><span>SEG 16</span></div>
+            <div class="date-pill" data-dia="2026-11-16"><span>SEG 16</span></div>
             <ul>
                 <li class="time-item">
                     <span>Ida</span>
@@ -1208,7 +1222,7 @@
                     <span class="time-badge-inline departure">18:42</span>
                 </li>
             </ul>
-            <div class="date-pill"><span>TER 17</span></div>
+            <div class="date-pill" data-dia="2026-11-17"><span>TER 17</span></div>
             <ul>
                 <li class="time-item departure">
                     <span>Partida</span>
@@ -1227,10 +1241,10 @@
 </section>
 
 <!-- Slide 5: Bratislava -->
-<section class="slide">
+<section class="slide" data-moeda="EUR" data-pais="SK">
     <div class="content">
         <h2>Bratislava <span class="flag">🇸🇰</span></h2>
-        <div class="date-pill"><span>TER 17</span></div>
+        <div class="date-pill" data-dia="2026-11-17"><span>TER 17</span></div>
         <div class="scroll-list">
             <ul>
                 <li class="time-item">
@@ -1264,18 +1278,18 @@
 </section>
 
 <!-- Slide 6: Budapeste -->
-<section class="slide">
+<section class="slide" data-moeda="HUF" data-pais="HU">
     <div class="content">
         <h2>Budapeste <span class="flag">🇭🇺</span></h2>
         <div class="scroll-list">
-            <div class="date-pill"><span>TER 17</span></div>
+            <div class="date-pill" data-dia="2026-11-17"><span>TER 17</span></div>
             <ul>
                 <li class="time-item">
                     <span>Chegada</span>
                     <span class="time-badge-minimal-hover">18:28</span>
                 </li>
             </ul>
-            <div class="date-pill"><span>QUA 18</span></div>
+            <div class="date-pill" data-dia="2026-11-18"><span>QUA 18</span></div>
             <ul>
                 <li>Walking tour of Buda <span class="time-badge-icon schedule">14h</span></li>
                 <li class="sub-item">
@@ -1310,7 +1324,7 @@
                 </li>
                 <li>Jantar no Szimpla Kert <span class="time-badge-icon">15:00 - 04:00</span></li>
             </ul>
-            <div class="date-pill"><span>QUI 19</span></div>
+            <div class="date-pill" data-dia="2026-11-19"><span>QUI 19</span></div>
             <ul>
                 <li>
                     <div class="flex-row">
@@ -1324,7 +1338,7 @@
                 <li>Pest Walking tour <span class="time-badge-icon schedule">10h</span></li>
                 <li>Moon Budapest</li>
             </ul>
-            <div class="date-pill"><span>SEX 20</span></div>
+            <div class="date-pill" data-dia="2026-11-20"><span>SEX 20</span></div>
             <ul>
                 <li class="time-item departure">
                     <span>Partida</span>
@@ -1344,11 +1358,11 @@
 </section>
 
 <!-- Slide 7: Amsterdã -->
-<section class="slide">
+<section class="slide" data-moeda="EUR" data-pais="NL">
     <div class="content">
         <h2>Amsterdã <span class="flag">🇳🇱</span></h2>
         <div class="scroll-list">
-            <div class="date-pill"><span>SEX 20</span></div>
+            <div class="date-pill" data-dia="2026-11-20"><span>SEX 20</span></div>
             <ul>
                 <li class="time-item">
                     <span>Chegada</span>
@@ -1368,7 +1382,7 @@
                     </div>
                 </li>
             </ul>
-            <div class="date-pill"><span>SAB 21</span></div>
+            <div class="date-pill" data-dia="2026-11-21"><span>SAB 21</span></div>
             <ul>
                 <li>
                     <div class="flex-row">
@@ -1401,7 +1415,7 @@
                     </div>
                 </li>
             </ul>
-            <div class="date-pill"><span>DOM 22</span></div>
+            <div class="date-pill" data-dia="2026-11-22"><span>DOM 22</span></div>
             <ul>
                 <li>Zaanse Schans - Moinhos de Vento</li>
                 <li>
@@ -1585,6 +1599,219 @@ function toggleTheme() {
 
 themeIconUpdate();
 addEventListener('temachange', themeIconUpdate);
+
+// Moeda, clima e feriados de cada cidade, a partir de data-moeda, data-pais, data-regiao e do
+// data-dia de cada faixa de data. As APIs são gratuitas e sem chave; o que elas devolvem fica
+// guardado no navegador, e sem internet a página mostra o último que conseguiu buscar.
+(() => {
+    const CHAVE = 'ferramentas.roteiro.dados';
+    const DIAS_PREVISAO = 16;
+    const URLS_CAMBIO = [
+        'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/brl.json',
+        'https://latest.currency-api.pages.dev/v1/currencies/brl.json',
+    ];
+    // Códigos de tempo da OMM: [de, até, ícone]
+    const CEU = [[0, 0, '☀️'], [1, 2, '🌤️'], [3, 3, '☁️'], [45, 48, '🌫️'], [51, 57, '🌦️'],
+        [61, 67, '🌧️'], [71, 77, '❄️'], [80, 82, '🌧️'], [85, 86, '❄️'], [95, 99, '⛈️']];
+
+    const cidades = [...document.querySelectorAll('.slide[data-moeda]')].map(slide => {
+        const nome = slide.querySelector('h2').firstChild.textContent.trim();
+        return { slide, nome, id: `${nome}|${slide.dataset.pais}`, moeda: slide.dataset.moeda,
+            pais: slide.dataset.pais, regiao: slide.dataset.regiao,
+            dias: [...slide.querySelectorAll('.date-pill[data-dia]')] };
+    });
+
+    let dados = {};
+    try { dados = JSON.parse(localStorage.getItem(CHAVE)) || {}; } catch (_) {}
+    dados.lugares ??= {};
+    dados.clima ??= {};
+    dados.feriados ??= {};
+
+    const json = url => fetch(url).then(r => {
+        if (!r.ok) throw new Error(`${r.status} ${url}`);
+        return r.json();
+    });
+    const iso = data => data.toLocaleDateString('sv');  // AAAA-MM-DD no fuso do celular
+    const ddmm = dia => `${dia.slice(8, 10)}/${dia.slice(5, 7)}`;
+    const reais = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+
+    // Há quanto tempo o clima foi buscado: agora, minutos, horas ou dias
+    function haQuanto(quando) {
+        const minutos = Math.floor((Date.now() - new Date(quando)) / 60000);
+        if (minutos < 1) return 'agora';
+        if (minutos < 60) return `há ${minutos} min`;
+        if (minutos < 24 * 60) return `há ${Math.floor(minutos / 60)} h`;
+        return `há ${Math.floor(minutos / (24 * 60))} d`;
+    }
+
+    // Valor redondo (1, 2, 5, 10, 20, 50…) cujo preço em reais fica mais perto de R$ 10
+    function referencia(reaisPorUnidade) {
+        const distancia = u => Math.abs(Math.log(reaisPorUnidade * u / 10));
+        let melhor = 1;
+        for (let e = 0; e <= 6; e++) {
+            for (const m of [1, 2, 5]) {
+                if (distancia(m * 10 ** e) < distancia(melhor)) melhor = m * 10 ** e;
+            }
+        }
+        return melhor;
+    }
+
+    async function buscarCambio() {
+        const moedas = [...new Set(cidades.map(c => c.moeda.toLowerCase()))];
+        for (const url of URLS_CAMBIO) {
+            try {
+                const r = await json(url);
+                dados.cambio = { data: r.date,
+                    taxas: Object.fromEntries(moedas.map(m => [m, r.brl[m]])) };
+                return;
+            } catch (_) {}
+        }
+    }
+
+    async function lugar(cidade) {
+        if (!dados.lugares[cidade.id]) {
+            const r = await json('https://geocoding-api.open-meteo.com/v1/search?count=1'
+                + `&language=pt&countryCode=${cidade.pais}`
+                + `&name=${encodeURIComponent(cidade.nome)}`);
+            const [achado] = r.results || [];
+            if (!achado) throw new Error(`lugar não encontrado: ${cidade.id}`);
+            dados.lugares[cidade.id] = { lat: achado.latitude, lon: achado.longitude };
+        }
+        return dados.lugares[cidade.id];
+    }
+
+    // Céu, mínima, máxima e chance de chuva vêm da previsão; a chance de neve é a fração das
+    // variações dos modelos ECMWF e GFS que preveem neve em alguma hora do dia. As duas buscas
+    // correm em paralelo e cada uma redesenha ao chegar: a de neve é bem mais lenta.
+    async function buscarClima(cidade) {
+        const hoje = new Date();
+        const limite = new Date(hoje);
+        limite.setDate(hoje.getDate() + DIAS_PREVISAO - 1);
+        const dias = cidade.dias.map(d => d.dataset.dia);
+        if (!dias.some(d => d >= iso(hoje) && d <= iso(limite))) return;
+
+        const { lat, lon } = await lugar(cidade);
+        const base = `latitude=${lat}&longitude=${lon}&timezone=auto`
+            + `&forecast_days=${DIAS_PREVISAO}`;
+        const clima = dados.clima[cidade.id] ??= {};
+        const previsao = json('https://api.open-meteo.com/v1/forecast?' + base
+            + '&daily=weather_code,temperature_2m_min,temperature_2m_max,'
+            + 'precipitation_probability_max').then(({ daily: d }) => {
+            d.time.forEach((dia, i) => {
+                if (!dias.includes(dia)) return;
+                clima[dia] = { ceu: d.weather_code[i], min: d.temperature_2m_min[i],
+                    max: d.temperature_2m_max[i], chuva: d.precipitation_probability_max[i],
+                    neve: clima[dia]?.neve, buscado: Date.now() };
+            });
+            atualizar();
+        });
+        const neve = json('https://ensemble-api.open-meteo.com/v1/ensemble?' + base
+            + '&models=ecmwf_ifs025,gfs_seamless&hourly=snowfall').then(({ hourly: h }) => {
+            const membros = Object.keys(h).filter(k => k.startsWith('snowfall'));
+            // Só conta os membros com dado no dia: o ECMWF acaba antes do GFS
+            const porDia = {};
+            h.time.forEach((hora, i) => {
+                const d = porDia[hora.slice(0, 10)] ??= { comDado: new Set(), nevam: new Set() };
+                for (const m of membros) {
+                    if (h[m][i] == null) continue;
+                    d.comDado.add(m);
+                    if (h[m][i] > 0) d.nevam.add(m);
+                }
+            });
+            for (const [dia, { comDado, nevam }] of Object.entries(porDia)) {
+                if (!dias.includes(dia) || !comDado.size) continue;
+                clima[dia] = { ...clima[dia],
+                    neve: Math.round(100 * nevam.size / comDado.size) };
+            }
+            atualizar();
+        });
+        await Promise.allSettled([previsao, neve]);
+    }
+
+    // Só feriados públicos: os escolares e os bancários não fecham comércio nem atrações
+    const feriadosEmBusca = {};
+    function buscarFeriados(cidade) {
+        const anos = new Set(cidade.dias.map(d => d.dataset.dia.slice(0, 4)));
+        return Promise.all([...anos].map(ano => {
+            const id = `${cidade.pais}|${ano}`;
+            if (dados.feriados[id]) return;
+            return feriadosEmBusca[id] ??= json(
+                `https://date.nager.at/api/v3/PublicHolidays/${ano}/${cidade.pais}`)
+                .then(lista => {
+                    dados.feriados[id] = lista.filter(f => f.types.includes('Public')).map(f => ({
+                        dia: f.date, nome: f.name,
+                        regioes: f.global ? null : f.counties || [] }));
+                });
+        }));
+    }
+
+    function feriado(cidade, dia) {
+        return (dados.feriados[`${cidade.pais}|${dia.slice(0, 4)}`] || []).find(f =>
+            f.dia === dia && (!f.regioes || f.regioes.includes(cidade.regiao)));
+    }
+
+    function desenharMoeda(cidade) {
+        cidade.slide.querySelector('.selo-moeda')?.remove();
+        const porReal = dados.cambio?.taxas[cidade.moeda.toLowerCase()];
+        if (cidade.moeda === 'BRL' || !porReal) return;
+        const unidade = referencia(1 / porReal);
+        const local = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: cidade.moeda,
+            currencyDisplay: 'narrowSymbol', minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        const selo = document.createElement('span');
+        const data = document.createElement('small');
+        selo.className = 'selo-moeda';
+        selo.textContent = `${local.format(unidade)} = ${reais.format(unidade / porReal)}`;
+        data.textContent = ddmm(dados.cambio.data);
+        selo.append(data);
+        cidade.slide.querySelector('h2').append(selo);
+    }
+
+    function desenharDias(cidade) {
+        const clima = dados.clima[cidade.id] || {};
+        for (const faixa of cidade.dias) {
+            const dia = faixa.dataset.dia;
+            faixa.querySelector('.clima-dia')?.remove();
+            if (faixa.nextElementSibling?.classList.contains('feriado-nome')) {
+                faixa.nextElementSibling.remove();
+            }
+            const c = clima[dia];
+            if (c && c.min != null && c.max != null) {
+                const icone = (CEU.find(([de, ate]) => c.ceu >= de && c.ceu <= ate) || [])[2];
+                const partes = [icone, `${Math.round(c.min)}°/${Math.round(c.max)}°`];
+                if (c.chuva != null) partes.push(`💧${c.chuva}%`);
+                if (c.neve > 1) partes.push(`❄️${c.neve}%`);
+                const texto = document.createElement('span');
+                texto.className = 'clima-dia';
+                texto.textContent = partes.filter(Boolean).join(' ');
+                if (c.buscado) {
+                    const idade = document.createElement('small');
+                    idade.textContent = ` · ${haQuanto(c.buscado)}`;
+                    texto.append(idade);
+                }
+                faixa.append(texto);
+            }
+            const f = feriado(cidade, dia);
+            faixa.classList.toggle('feriado', Boolean(f));
+            if (f) {
+                const nome = document.createElement('div');
+                nome.className = 'feriado-nome';
+                nome.textContent = `⚑ ${f.nome} · feriado ${f.regioes ? 'regional' : 'nacional'}`;
+                faixa.after(nome);
+            }
+        }
+    }
+
+    const desenhar = () => cidades.forEach(c => { desenharMoeda(c); desenharDias(c); });
+    // Cada busca redesenha ao chegar: uma API lenta não segura as outras
+    const atualizar = () => {
+        try { localStorage.setItem(CHAVE, JSON.stringify(dados)); } catch (_) {}
+        desenhar();
+    };
+    desenhar();
+    setInterval(desenhar, 60000);  // mantém o "há quanto tempo" certo com a página aberta
+    [buscarCambio(), ...cidades.flatMap(c => [buscarClima(c), buscarFeriados(c)])]
+        .forEach(busca => busca.then(atualizar, () => {}));
+})();
 </script>
 </body>
 </html>
