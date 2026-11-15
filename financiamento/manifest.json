@@ -5,8 +5,8 @@
   "start_url": "/ferramentas/financiamento/",
   "scope": "/ferramentas/financiamento/",
   "display": "standalone",
-  "background_color": "#f5f7fa",
-  "theme_color": "#2563eb",
+  "background_color": "#151515",
+  "theme_color": "#151515",
   "orientation": "portrait-primary",
   "icons": [
     {

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'financiamento-v3';
+const CACHE_NAME = 'financiamento-v4';
 
 const ASSETS = [
   '/ferramentas/financiamento/',
@@ -7,6 +7,7 @@ const ASSETS = [
   '/ferramentas/financiamento/icon-192.png',
   '/ferramentas/financiamento/icon-512.png',
   'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js',
+  '/ferramentas/assets/glass.css',
   '/ferramentas/assets/base.css',
   '/ferramentas/assets/theme.js',
 ];

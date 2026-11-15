@@ -8,109 +8,81 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Financiamento">
-<meta name="theme-color" content="#3d5fa8">
+<meta name="theme-color" content="#151515">
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>Simulador de Financiamento</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../assets/glass.css">
 <link rel="stylesheet" href="../assets/base.css">
 <script src="../assets/theme.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-/* Nomes antigos usados pelo código da página, apontando para o visual comum */
-:root{--primary:var(--accent);--green:var(--ok);--red:var(--miss);--text:var(--ink);
-  --text2:var(--muted);--bg:var(--sunken);--card:var(--surface);--border:var(--line)}
 main{max-width:960px}
 .lede{margin-bottom:1rem}
-.card{padding:1rem 1.1rem}
-.card h2{margin-bottom:.75rem}
+.card h2{margin:0 0 .75rem}
 .form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:.75rem}
+.form-grid.dois{grid-template-columns:1fr 1fr}
 .divider{border-top:1px solid var(--line);padding-top:.75rem;margin-top:.25rem}
 .divider-title{display:flex;align-items:center;gap:10px;margin:0 0 .75rem}
 .divider-title::before,.divider-title::after{content:'';flex:1;height:1px;background:var(--line)}
-.divider-title span{font:600 13px var(--font-display);color:var(--muted);white-space:nowrap;
-  letter-spacing:.02em}
-.btn{font:600 14px var(--font-body);color:var(--surface);background:var(--accent);
-  border:1px solid var(--accent);border-radius:6px;padding:.5rem 1.4rem;cursor:pointer}
-.btn:hover{filter:brightness(1.08)}
+.divider-title span{font:500 12px var(--mono);color:var(--muted);white-space:nowrap}
 .action-bar{display:flex;gap:.75rem;align-items:end;flex-wrap:wrap}
 .action-bar>div{flex:1;min-width:120px;max-width:220px}
 
-/* Abas principais e abas da tabela */
-.main-tabs{display:flex;gap:4px;margin:0 0 1rem;flex-wrap:wrap}
-.main-tab,.tab{font:500 14px var(--font-body);color:var(--ink);background:none;cursor:pointer;
-  border:1px solid transparent;border-radius:6px;padding:6px 12px;white-space:nowrap}
-.main-tab:hover,.tab:hover{background:var(--sunken)}
-.main-tab.active,.tab.active{background:var(--accent-soft);color:var(--accent);
-  border-color:var(--line)}
-.tabs{display:flex;gap:4px;margin-bottom:.75rem;flex-wrap:wrap}
-.tab{font-size:13px;padding:4px 10px}
+/* Abas principais e abas da tabela: pílulas do Glass, que rolam se não couberem */
+.main-tabs,#tableTabs{max-width:100%;overflow-x:auto;scrollbar-width:none}
+.main-tabs{margin:0 0 1rem}
+#tableTabs{margin:0 0 .75rem}
+.main-tabs>*,#tableTabs>*{white-space:nowrap}
 .tab-content{display:none}
 .tab-content.active{display:block}
 
-/* Resumos numéricos, no formato "facts" */
-.summary-grid,.invest-stats{display:grid;gap:1px;background:var(--line);
-  border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:0 0 1rem}
-.summary-grid{grid-template-columns:repeat(5,1fr)}
-.invest-stats{grid-template-columns:repeat(3,1fr)}
-.summary-card,.invest-stat{background:var(--surface);padding:.7rem .9rem}
-.summary-card .label,.invest-stat .label{font-size:12.5px;color:var(--muted)}
-.summary-card .value,.invest-stat .value{font:600 1.1rem/1.25 var(--font-display);
-  font-variant-numeric:tabular-nums;margin-top:.15rem}
-.summary-card .sub,.invest-stat .sub{font-size:12px;color:var(--muted);line-height:1.3}
-.summary-card.blue .value{color:var(--accent)}
-.summary-card.green .value{color:var(--ok)}
-.summary-card.red .value{color:var(--miss)}
+/* Resumos numéricos: valores menores que o padrão do Glass, para caber cinco por linha */
+.kpis{margin:0 0 1rem}
+.kpi b{font-size:20px;white-space:normal;overflow-wrap:anywhere}
 
 /* Gráficos */
 .charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
-.charts-grid.single{grid-template-columns:1fr}
-.chart-wrap{background:var(--surface);border:1px solid var(--line);border-radius:10px;
-  padding:1rem;min-width:0}
+.charts-grid>.card{margin:0;min-width:0}
 .chart-wrap.full{grid-column:1/-1}
-.chart-wrap h3{font:600 1rem/1.3 var(--font-display);margin:0 0 .6rem}
+.chart-wrap h3{margin:0 0 .6rem}
 canvas{width:100%!important;max-height:260px}
 
 /* Tabelas */
-table{width:100%;border-collapse:collapse;font-size:13.5px;font-variant-numeric:tabular-nums}
-th{background:var(--sunken);padding:.45rem .6rem;text-align:right;font-weight:600;
-  font-size:12.5px;color:var(--muted);position:sticky;top:0}
-td{padding:.4rem .6rem;text-align:right;border-bottom:1px solid var(--line)}
-th:first-child,td:first-child{text-align:center}
-.table-scroll{max-height:400px;overflow:auto;border-radius:10px;border:1px solid var(--line);
-  background:var(--surface)}
+table{font-variant-numeric:tabular-nums}
+td.num{white-space:nowrap}
+.table-scroll{max-height:400px;overflow:auto}
+/* Cabeçalho fixo: a borda vira sombra, porque a borda do th não acompanha a rolagem */
+.table-scroll th{position:sticky;top:0;background:var(--surface);
+  box-shadow:inset 0 -1px var(--line2)}
 #results{display:none}
-.timeline-table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:.5rem}
-.timeline-table tr.positive{background:var(--ok-soft)}
-.timeline-table tr.negative{background:var(--miss-soft)}
-.timeline-table tr.breakeven{background:var(--warn-soft);font-weight:600}
+tr.extra,tr.positive{background:color-mix(in srgb,var(--ok) 13%,transparent)}
+tr.negative{background:color-mix(in srgb,var(--bad) 13%,transparent)}
+tr.breakeven{background:color-mix(in srgb,var(--warn) 13%,transparent);font-weight:600}
+.forte{font-weight:600}
 .phase-indicator{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px}
-.phase-loss{background:var(--miss)}
+.phase-loss{background:var(--bad)}
 .phase-profit{background:var(--ok)}
+.sub{font-size:11px;color:var(--muted);font-weight:400}
 
-/* Comparar imóveis */
+/* Comparar imóveis: cada imóvel tem uma cor, usada no cartão, na tabela e no gráfico */
 .comp-forms{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
-.comp-form-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;
-  padding:1rem 1.1rem;border-top:4px solid var(--accent)}
-.comp-form-card.imovel2{border-top-color:var(--ok)}
-.comp-form-card h3{font:600 1.05rem var(--font-display);margin:0 0 .75rem}
-#compMetrics{overflow-x:auto}
+.comp-form-card{--c:var(--primary);margin:0;
+  border-color:color-mix(in srgb,var(--c) 40%,var(--line2))}
+.comp-form-card.imovel2{--c:var(--ok)}
+.comp-form-card h3{margin:0 0 .75rem}
+.comp-form-card h3::before{content:'';display:inline-block;width:10px;height:10px;
+  border-radius:50%;background:var(--c);margin-right:8px}
 .comp-table-diff{font-weight:600}
-.comp-table-diff.pos{color:var(--ok)}
-.comp-table-diff.neg{color:var(--miss)}
-.comp-table th.im1{color:var(--accent)}
-.comp-table th.im2{color:var(--ok)}
+th.im1{color:var(--primary)}
+th.im2{color:var(--ok)}
 .comp-legend{display:flex;gap:16px;align-items:center;font-size:13px;margin-bottom:.6rem;
   flex-wrap:wrap}
-.comp-legend-dot{width:12px;height:12px;border-radius:3px;display:inline-block;margin-right:4px}
+.comp-legend-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px}
 
-@media(max-width:768px){.charts-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr 1fr}
-  .summary-grid{grid-template-columns:repeat(3,1fr)}.invest-stats{grid-template-columns:1fr}
-  .comp-forms{grid-template-columns:1fr}}
-@media(max-width:480px){.form-grid{grid-template-columns:1fr}
-  .summary-grid{grid-template-columns:repeat(2,1fr)}.action-bar{flex-direction:column;align-items:stretch}
-  .action-bar>div{max-width:none}}
+@media(max-width:768px){.charts-grid{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr 1fr}.comp-forms{grid-template-columns:1fr}}
+@media(max-width:480px){.form-grid,.form-grid.dois{grid-template-columns:1fr}
+  .action-bar{flex-direction:column;align-items:stretch}.action-bar>div{max-width:none}}
 </style>
 </head>
 <body>
@@ -122,16 +94,19 @@ th:first-child,td:first-child{text-align:center}
     <a href="../ir-etf/">IR ETF</a>
     <a href="../roteiro-viagem/">Roteiro</a>
   </nav>
-  <button class="theme-btn" id="tema" type="button"></button>
+  <button class="btn" id="tema" type="button"></button>
 </header>
 <main>
 <h1>Simulador de Financiamento</h1>
 <p class="lede">Compare sistemas de amortizacao e planeje seu financiamento</p>
 
-<div class="main-tabs">
-<button class="main-tab active" onclick="App.switchMainTab('simulador',this)">Simulador</button>
-<button class="main-tab" onclick="App.switchMainTab('investimento',this)">Investimento (Aluguel)</button>
-<button class="main-tab" onclick="App.switchMainTab('comparacao',this)">Comparar Imoveis</button>
+<div class="tabs main-tabs">
+<button class="main-tab active" type="button"
+  onclick="App.switchMainTab('simulador',this)">Simulador</button>
+<button class="main-tab" type="button"
+  onclick="App.switchMainTab('investimento',this)">Investimento (Aluguel)</button>
+<button class="main-tab" type="button"
+  onclick="App.switchMainTab('comparacao',this)">Comparar Imoveis</button>
 </div>
 
 <!-- Aba Simulador -->
@@ -156,17 +131,17 @@ th:first-child,td:first-child{text-align:center}
     <div class="action-bar">
       <div><label>Sistema</label><select id="sistema"><option value="sac" selected>SAC</option><option value="price">Tabela Price</option><option value="ambos">SAC x Price</option></select></div>
       <div><label>Amort. Extra</label><select id="usarExtra"><option value="sim" selected>Sim</option><option value="nao">Nao</option></select></div>
-      <button class="btn" onclick="App.simular()">Simular</button>
+      <button class="btn primary" type="button" onclick="App.simular()">Simular</button>
     </div>
   </div>
   <div id="results">
-    <div class="summary-grid" id="summaryGrid"></div>
+    <div class="kpis" id="summaryGrid"></div>
     <div id="compareSection"></div>
     <div class="charts-grid" id="chartsArea"></div>
     <div class="card">
       <h2>Tabela de Amortizacao</h2>
       <div class="tabs" id="tableTabs"></div>
-      <div class="table-scroll" id="tableArea"></div>
+      <div class="tablewrap table-scroll" id="tableArea"></div>
     </div>
   </div>
 </div>
@@ -192,7 +167,7 @@ th:first-child,td:first-child{text-align:center}
     </div>
     <div class="divider">
       <div class="divider-title"><span>Dados do Aluguel</span></div>
-      <div class="form-grid" style="grid-template-columns:1fr 1fr">
+      <div class="form-grid dois">
         <div><label>Aluguel Atual (R$)</label><input type="text" id="aluguelValor" value="2.000,00"></div>
         <div><label>Reajuste Aluguel (%)</label><input type="text" id="aluguelReajuste" value="5,00"></div>
       </div>
@@ -200,15 +175,16 @@ th:first-child,td:first-child{text-align:center}
     <div class="action-bar">
       <div><label>Sistema</label><select id="investSistema"><option value="sac">SAC</option><option value="price">Tabela Price</option></select></div>
       <div><label>Amort. Extra</label><select id="investExtra"><option value="sim">Sim</option><option value="nao">Nao</option></select></div>
-      <button class="btn" onclick="App.simularInvestimento()">Analisar</button>
+      <button class="btn primary" type="button"
+        onclick="App.simularInvestimento()">Analisar</button>
     </div>
   </div>
   <div id="investResults" style="display:none">
-    <div class="invest-stats" id="investStats"></div>
+    <div class="kpis" id="investStats"></div>
     <div class="charts-grid" id="investChartsArea"></div>
     <div class="card">
       <h2>Evolucao Mensal — Parcela vs Aluguel</h2>
-      <div class="table-scroll" id="investTableArea"></div>
+      <div class="tablewrap table-scroll" id="investTableArea"></div>
     </div>
   </div>
 </div>
@@ -216,18 +192,18 @@ th:first-child,td:first-child{text-align:center}
 <!-- Aba Comparacao -->
 <div id="tabComparacao" class="tab-content">
   <div class="comp-forms">
-    <div class="comp-form-card">
+    <div class="card comp-form-card">
       <h3>Imovel 1</h3>
-      <div class="form-grid" style="grid-template-columns:1fr 1fr">
+      <div class="form-grid dois">
         <div><label>Valor Imovel (R$)</label><input type="text" id="compValor1" value="439.990,00"></div>
         <div><label>Entrada (%)</label><input type="text" id="compEntrada1" value="40,00"></div>
         <div><label>Taxa Juros Anual (%)</label><input type="text" id="compTaxa1" value="9,01"></div>
         <div><label>Prazo (anos)</label><input type="number" id="compPrazo1" value="35" min="1" max="35"></div>
       </div>
     </div>
-    <div class="comp-form-card imovel2">
+    <div class="card comp-form-card imovel2">
       <h3>Imovel 2</h3>
-      <div class="form-grid" style="grid-template-columns:1fr 1fr">
+      <div class="form-grid dois">
         <div><label>Valor Imovel (R$)</label><input type="text" id="compValor2" value="267.000,00"></div>
         <div><label>Entrada (%)</label><input type="text" id="compEntrada2" value="40,00"></div>
         <div><label>Taxa Juros Anual (%)</label><input type="text" id="compTaxa2" value="9,01"></div>
@@ -248,12 +224,12 @@ th:first-child,td:first-child{text-align:center}
     <div class="action-bar" style="margin-top:8px">
       <div><label>Sistema</label><select id="compSistema"><option value="sac">SAC</option><option value="price">Tabela Price</option></select></div>
       <div><label>Amort. Extra</label><select id="compExtra"><option value="sim">Sim</option><option value="nao">Nao</option></select></div>
-      <button class="btn" onclick="App.simularComparacao()">Comparar</button>
+      <button class="btn primary" type="button" onclick="App.simularComparacao()">Comparar</button>
     </div>
   </div>
   <div id="compResults" style="display:none">
-    <div class="card" id="compMetrics" style="margin-bottom:14px"></div>
-    <div class="card" style="margin-bottom:14px">
+    <div class="card" id="compMetrics"></div>
+    <div class="card">
       <h2>Parcelas ao Longo do Tempo</h2>
       <div class="comp-legend" id="compLegend"></div>
       <canvas id="chComp" height="260"></canvas>
@@ -268,8 +244,11 @@ th:first-child,td:first-child{text-align:center}
 const C={};
 function lerCores(){
   const css=getComputedStyle(document.documentElement),v=n=>css.getPropertyValue(n).trim();
-  Object.assign(C,{accent:v('--accent'),ok:v('--ok'),miss:v('--miss')});
-  if(window.Chart){Chart.defaults.color=v('--muted');Chart.defaults.borderColor=v('--line');Chart.defaults.font.family=v('--font-body')}
+  Object.assign(C,{primary:v('--primary'),ok:v('--ok'),bad:v('--bad')});
+  if(window.Chart){
+    Chart.defaults.color=v('--muted');Chart.defaults.borderColor=v('--line2');
+    Chart.defaults.font.family=v('--font');
+  }
 }
 lerCores();
 addEventListener('temachange',()=>{
@@ -282,7 +261,7 @@ addEventListener('temachange',()=>{
 });
 const Utils={
   fmt:v=>v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}),
-  fmtC:v=>'R$ '+Utils.fmt(v),
+  fmtC:v=>'R$\u00a0'+Utils.fmt(v),
   fmtPrazo(m){if(m<24)return m+' mes'+(m>1?'es':'');const a=Math.floor(m/12),r=m%12;return a+' ano'+(a>1?'s':'')+(r>0?' e '+r+' mes'+(r>1?'es':''):'')},
   parseNum:id=>parseFloat(document.getElementById(id).value.replace(/\./g,'').replace(',','.'))||0,
   getEl:id=>document.getElementById(id),
@@ -388,27 +367,36 @@ const UI={
     const tjD=Utils.totalJuros(displayP),tpD=Utils.totalPago(displayP);
     const pct=tjD/tpD*100;
     const p1=displayP[0].prestacaoBase||displayP[0].prestacao;
-    Utils.getEl('summaryGrid').innerHTML=`
-      <div class="summary-card blue"><div class="label">Valor Financiado</div><div class="value">${Utils.fmtC(principal)}</div></div>
-      <div class="summary-card blue"><div class="label">Entrada</div><div class="value">${Utils.fmtC(entrada)}</div><div class="sub">${Utils.fmt(entradaPct)}% do imovel</div></div>
-      <div class="summary-card green"><div class="label">Parcela Inicial</div><div class="value">${Utils.fmtC(p1)}</div></div>
-      <div class="summary-card red"><div class="label">Total Juros</div><div class="value">${Utils.fmtC(tjD)}</div><div class="sub">${Utils.fmt(pct)}% do total</div></div>
-      <div class="summary-card ${hasExtra?'green':'blue'}"><div class="label">Prazo Final</div><div class="value">${Utils.fmtPrazo(displayP.length)}</div>${hasExtra?`<div class="sub">Eram ${Utils.fmtPrazo(prazo)}</div>`:''}</div>`;
+    // Valor em gradiente (azul) ou, com classe, na cor de status (verde/vermelho)
+    const kpi=(rot,val,cls,nota)=>`<div class="kpi"><small>${rot}</small>`
+      +`<b>${cls?`<span class="${cls}">${val}</span>`:val}</b>${nota?`<i>${nota}</i>`:''}</div>`;
+    Utils.getEl('summaryGrid').innerHTML=
+      kpi('Valor Financiado',Utils.fmtC(principal))
+      +kpi('Entrada',Utils.fmtC(entrada),'',`${Utils.fmt(entradaPct)}% do imovel`)
+      +kpi('Parcela Inicial',Utils.fmtC(p1),'pos')
+      +kpi('Total Juros',Utils.fmtC(tjD),'neg',`${Utils.fmt(pct)}% do total`)
+      +kpi('Prazo Final',Utils.fmtPrazo(displayP.length),hasExtra?'pos':'',
+        hasExtra?`Eram ${Utils.fmtPrazo(prazo)}`:'');
   },
   renderComparison(sacP,priceP){
     const tpS=Utils.totalPago(sacP),tjS=Utils.totalJuros(sacP),tpP=Utils.totalPago(priceP),tjP=Utils.totalJuros(priceP);
     const eco=tpP-tpS,pctEco=tjP>0?eco/tjP*100:0;
-    Utils.getEl('compareSection').innerHTML=`<div class="card" style="margin-bottom:20px">
+    const linha=(rot,s,p)=>`<tr><td class="muted">${rot}</td>`
+      +`<td class="num forte">${Utils.fmtC(s)}</td>`
+      +`<td class="num forte">${Utils.fmtC(p)}</td></tr>`;
+    Utils.getEl('compareSection').innerHTML=`<div class="card">
       <h2>SAC vs Price</h2>
-      <table style="width:100%;border-collapse:collapse;font-size:.9rem">
-      <thead><tr><th style="text-align:left;padding:8px 12px">Metrica</th><th style="text-align:right;padding:8px 12px;color:var(--primary)">SAC</th><th style="text-align:right;padding:8px 12px;color:var(--green)">Price</th></tr></thead>
+      <div class="tablewrap"><table>
+      <thead><tr><th>Metrica</th><th class="num im1">SAC</th>
+        <th class="num im2">Price</th></tr></thead>
       <tbody>
-      <tr><td style="padding:8px 12px;color:var(--text2)">Parcela Inicial</td><td style="text-align:right;padding:8px 12px;font-weight:600">${Utils.fmtC(sacP[0].prestacao)}</td><td style="text-align:right;padding:8px 12px;font-weight:600">${Utils.fmtC(priceP[0].prestacao)}</td></tr>
-      <tr style="background:var(--bg)"><td style="padding:8px 12px;color:var(--text2)">Ultima Parcela</td><td style="text-align:right;padding:8px 12px;font-weight:600">${Utils.fmtC(sacP[sacP.length-1].prestacao)}</td><td style="text-align:right;padding:8px 12px;font-weight:600">${Utils.fmtC(priceP[priceP.length-1].prestacao)}</td></tr>
-      <tr><td style="padding:8px 12px;color:var(--text2)">Total Juros</td><td style="text-align:right;padding:8px 12px;font-weight:600">${Utils.fmtC(tjS)}</td><td style="text-align:right;padding:8px 12px;font-weight:600">${Utils.fmtC(tjP)}</td></tr>
-      <tr style="background:var(--bg)"><td style="padding:8px 12px;color:var(--text2)">Total Pago</td><td style="text-align:right;padding:8px 12px;font-weight:600">${Utils.fmtC(tpS)}</td><td style="text-align:right;padding:8px 12px;font-weight:600">${Utils.fmtC(tpP)}</td></tr>
-      </tbody></table>
-      <div style="margin-top:12px;padding:10px 12px;background:var(--warn-soft);border-radius:8px;font-size:.85rem;color:var(--warn);font-weight:500">Economia com SAC: <strong>${Utils.fmtC(eco)}</strong> (${Utils.fmt(pctEco)}% menos juros)</div>
+      ${linha('Parcela Inicial',sacP[0].prestacao,priceP[0].prestacao)}
+      ${linha('Ultima Parcela',sacP[sacP.length-1].prestacao,priceP[priceP.length-1].prestacao)}
+      ${linha('Total Juros',tjS,tjP)}
+      ${linha('Total Pago',tpS,tpP)}
+      </tbody></table></div>
+      <div class="callout" style="--c:var(--warn);margin-top:12px"><b>Economia com SAC:</b>
+        <span>${Utils.fmtC(eco)} (${Utils.fmt(pctEco)}% menos juros)</span></div>
       </div>`;
   },
   renderCharts(sacP,priceP,sacPE,pricePE,showSac,showPrice,hasExtra,anos){
@@ -420,39 +408,49 @@ const UI={
     const maxAnoParcelas=Math.ceil(Math.max(...allParc.map(p=>p.length))/12);
     const labelsParcelas=[];
     for(let i=0;i<=maxAnoParcelas;i++)labelsParcelas.push(i);
-    Utils.getEl('chartsArea').innerHTML='<div class="chart-wrap full"><h3>Valores das Parcelas</h3><canvas id="ch3" height="260"></canvas></div>'
-      +'<div class="chart-wrap"><h3>Saldo Devedor</h3><canvas id="ch1" height="260"></canvas></div>'
-      +'<div class="chart-wrap"><h3>Juros Acumulados</h3><canvas id="ch2" height="260"></canvas></div>';
+    Utils.getEl('chartsArea').innerHTML=
+      '<div class="card chart-wrap full"><h3>Valores das Parcelas</h3>'
+      +'<canvas id="ch3" height="260"></canvas></div>'
+      +'<div class="card chart-wrap"><h3>Saldo Devedor</h3>'
+      +'<canvas id="ch1" height="260"></canvas></div>'
+      +'<div class="card chart-wrap"><h3>Juros Acumulados</h3>'
+      +'<canvas id="ch2" height="260"></canvas></div>';
     const dsP=[];
-    if(showSac)dsP.push(Charts.buildDataset(hasExtra?sacPE:sacP,'SAC',C.accent,null,maxAnoParcelas,'prestacaoBase'));
-    if(showPrice)dsP.push(Charts.buildDataset(hasExtra?pricePE:priceP,'Price',C.ok,null,maxAnoParcelas,'prestacaoBase'));
+    if(showSac)dsP.push(Charts.buildDataset(hasExtra?sacPE:sacP,'SAC',C.primary,null,
+      maxAnoParcelas,'prestacaoBase'));
+    if(showPrice)dsP.push(Charts.buildDataset(hasExtra?pricePE:priceP,'Price',C.ok,null,
+      maxAnoParcelas,'prestacaoBase'));
     Charts.create('ch3',labelsParcelas,dsP);
     const dsS=[];
-    if(showSac)dsS.push(Charts.buildDataset(hasExtra?sacPE:sacP,'SAC',C.accent,null,maxAno));
+    if(showSac)dsS.push(Charts.buildDataset(hasExtra?sacPE:sacP,'SAC',C.primary,null,maxAno));
     if(showPrice)dsS.push(Charts.buildDataset(hasExtra?pricePE:priceP,'Price',C.ok,null,maxAno));
     Charts.create('ch1',labels,dsS);
     const dsA=[];
-    if(showSac)dsA.push(Charts.buildAccumulated(hasExtra?sacPE:sacP,'SAC',C.accent,maxAno));
+    if(showSac)dsA.push(Charts.buildAccumulated(hasExtra?sacPE:sacP,'SAC',C.primary,maxAno));
     if(showPrice)dsA.push(Charts.buildAccumulated(hasExtra?pricePE:priceP,'Price',C.ok,maxAno));
     Charts.create('ch2',labels,dsA);
   },
   renderTabs(showSac,showPrice,hasExtra){
     let html='';
-    if(showSac)html+='<div class="tab active" onclick="App.showTable(\'sac\',this)">SAC</div>';
-    if(showPrice)html+=`<div class="tab ${!showSac?'active':''}" onclick="App.showTable('price',this)">Price</div>`;
-    if(hasExtra&&showSac)html+='<div class="tab" onclick="App.showTable(\'sacExtra\',this)">SAC + Extra</div>';
-    if(hasExtra&&showPrice)html+='<div class="tab" onclick="App.showTable(\'priceExtra\',this)">Price + Extra</div>';
+    const aba=(tipo,rot,ativa)=>`<button class="tab${ativa?' active':''}" type="button" `
+      +`onclick="App.showTable('${tipo}',this)">${rot}</button>`;
+    if(showSac)html+=aba('sac','SAC',true);
+    if(showPrice)html+=aba('price','Price',!showSac);
+    if(hasExtra&&showSac)html+=aba('sacExtra','SAC + Extra');
+    if(hasExtra&&showPrice)html+=aba('priceExtra','Price + Extra');
     Utils.getEl('tableTabs').innerHTML=html;
   },
   renderTable(parcelas,isExtra){
-    let html='<table><thead><tr><th>#</th><th>Prestacao</th><th>Juros</th><th>Amortizacao</th>';
-    if(isExtra)html+='<th>Extra</th>';
-    html+='<th>Saldo Devedor</th></tr></thead><tbody>';
+    let html='<table><thead><tr><th class="num">#</th><th class="num">Prestacao</th>'
+      +'<th class="num">Juros</th><th class="num">Amortizacao</th>';
+    if(isExtra)html+='<th class="num">Extra</th>';
+    html+='<th class="num">Saldo Devedor</th></tr></thead><tbody>';
     parcelas.forEach(r=>{
-      const style=isExtra&&r.extra>0?' style="background:var(--ok-soft)"':'';
-      html+=`<tr${style}><td>${r.n}</td><td>${Utils.fmtC(r.prestacao)}</td><td>${Utils.fmtC(r.juros)}</td><td>${Utils.fmtC(r.amort)}</td>`;
-      if(isExtra)html+=`<td style="color:var(--green);font-weight:600">${r.extra>0?Utils.fmtC(r.extra):'-'}</td>`;
-      html+=`<td>${Utils.fmtC(r.saldo)}</td></tr>`;
+      const cls=isExtra&&r.extra>0?' class="extra"':'';
+      html+=`<tr${cls}><td class="num">${r.n}</td><td class="num">${Utils.fmtC(r.prestacao)}</td>`
+        +`<td class="num">${Utils.fmtC(r.juros)}</td><td class="num">${Utils.fmtC(r.amort)}</td>`;
+      if(isExtra)html+=`<td class="num pos forte">${r.extra>0?Utils.fmtC(r.extra):'-'}</td>`;
+      html+=`<td class="num">${Utils.fmtC(r.saldo)}</td></tr>`;
     });
     Utils.getEl('tableArea').innerHTML=html+'</tbody></table>';
   }
@@ -553,16 +551,19 @@ const App={
     const diffInicial=aluguelInicial-primeiraParcela;
 
     const statsEl=Utils.getEl('investStats');
-    statsEl.innerHTML=`
-      <div class="invest-stat"><div class="label">Diferenca Inicial (Mes 1)</div>
-        <div class="value" style="color:${diffInicial>=0?'var(--green)':'var(--red)'}">${Utils.fmtC(diffInicial)}/mes</div>
-        <div class="sub">Aluguel ${Utils.fmtC(aluguelInicial)} — Parcela ${Utils.fmtC(primeiraParcela)}</div></div>
-      <div class="invest-stat"><div class="label">${breakevenMes?'Parcela &lt; Aluguel a partir do':'Parcela sempre maior'}</div>
-        <div class="value" style="color:${breakevenMes?'var(--green)':'var(--red)'}">${breakevenMes?'Mes '+breakevenMes+' ('+Utils.fmtPrazo(breakevenMes)+')':'—'}</div>
-        <div class="sub">${breakevenMes?'A partir daqui voce lucra todo mes':'O aluguel nunca supera a parcela no prazo'}</div></div>
-      <div class="invest-stat"><div class="label">${acumBreakevenMes?'Recupera Investimento no':'Saldo Acumulado Final'}</div>
-        <div class="value" style="color:${acumBreakevenMes?'var(--green)':'var(--red)'}">${acumBreakevenMes?'Mes '+acumBreakevenMes+' ('+Utils.fmtPrazo(acumBreakevenMes)+')':Utils.fmtC(acumulado)}</div>
-        <div class="sub">${acumBreakevenMes?'Quando o acumulado fica positivo':'Balanco ao fim do financiamento'}</div></div>`;
+    const stat=(rot,ok,val,nota)=>`<div class="kpi"><small>${rot}</small>`
+      +`<b><span class="${ok?'pos':'neg'}">${val}</span></b><i>${nota}</i></div>`;
+    const mesPrazo=m=>'Mes '+m+' ('+Utils.fmtPrazo(m)+')';
+    statsEl.innerHTML=
+      stat('Diferenca Inicial (Mes 1)',diffInicial>=0,Utils.fmtC(diffInicial)+'/mes',
+        `Aluguel ${Utils.fmtC(aluguelInicial)} — Parcela ${Utils.fmtC(primeiraParcela)}`)
+      +stat(breakevenMes?'Parcela &lt; Aluguel a partir do':'Parcela sempre maior',breakevenMes,
+        breakevenMes?mesPrazo(breakevenMes):'—',
+        breakevenMes?'A partir daqui voce lucra todo mes'
+          :'O aluguel nunca supera a parcela no prazo')
+      +stat(acumBreakevenMes?'Recupera Investimento no':'Saldo Acumulado Final',acumBreakevenMes,
+        acumBreakevenMes?mesPrazo(acumBreakevenMes):Utils.fmtC(acumulado),
+        acumBreakevenMes?'Quando o acumulado fica positivo':'Balanco ao fim do financiamento');
 
     const labels=[],dsAluguel=[],dsParcela=[],dsAcum=[];
     for(let i=0;i<rows.length;i+=12){
@@ -573,23 +574,29 @@ const App={
       dsAcum.push(r.acumulado);
     }
     Utils.getEl('investChartsArea').innerHTML=
-      '<div class="chart-wrap"><h3>Parcela vs Aluguel (anual)</h3><canvas id="chInv1" height="260"></canvas></div>'+
-      '<div class="chart-wrap"><h3>Diferenca Acumulada (Aluguel - Parcela)</h3><canvas id="chInv2" height="260"></canvas></div>';
+      '<div class="card chart-wrap"><h3>Parcela vs Aluguel (anual)</h3>'
+      +'<canvas id="chInv1" height="260"></canvas></div>'
+      +'<div class="card chart-wrap"><h3>Diferenca Acumulada (Aluguel - Parcela)</h3>'
+      +'<canvas id="chInv2" height="260"></canvas></div>';
     Charts.create('chInv1',labels,[
-      {label:'Aluguel',data:dsAluguel,borderColor:C.ok,backgroundColor:C.ok+'20',tension:.3,pointRadius:2,borderWidth:2,fill:false},
-      {label:'Parcela',data:dsParcela,borderColor:C.miss,backgroundColor:C.miss+'20',tension:.3,pointRadius:2,borderWidth:2,fill:false}
+      {label:'Aluguel',data:dsAluguel,borderColor:C.ok,backgroundColor:C.ok+'20',
+       tension:.3,pointRadius:2,borderWidth:2,fill:false},
+      {label:'Parcela',data:dsParcela,borderColor:C.bad,backgroundColor:C.bad+'20',
+       tension:.3,pointRadius:2,borderWidth:2,fill:false}
     ]);
     Charts.create('chInv2',labels,[
       {label:'Saldo Acumulado',data:dsAcum,tension:.3,pointRadius:2,borderWidth:2,fill:true,
        backgroundColor:C.ok+'30',
        borderColor:C.ok,
        segment:{
-         borderColor:ctx=>ctx.p1.parsed.y<0?C.miss:C.ok,
-         backgroundColor:ctx=>ctx.p1.parsed.y<0?C.miss+'30':C.ok+'30'
+         borderColor:ctx=>ctx.p1.parsed.y<0?C.bad:C.ok,
+         backgroundColor:ctx=>ctx.p1.parsed.y<0?C.bad+'30':C.ok+'30'
        }}
     ]);
 
-    let tableHtml='<table class="timeline-table"><thead><tr><th>Ano</th><th>Mes</th><th>Aluguel</th><th>Parcela</th><th>Diferenca</th><th>Acumulado</th><th>Fase</th></tr></thead><tbody>';
+    let tableHtml='<table><thead><tr><th class="num">Ano</th><th class="num">Mes</th>'
+      +'<th class="num">Aluguel</th><th class="num">Parcela</th><th class="num">Diferenca</th>'
+      +'<th class="num">Acumulado</th><th>Fase</th></tr></thead><tbody>';
     for(let i=0;i<rows.length;i++){
       const r=rows[i];
       const isYearStart=i%12===0;
@@ -598,7 +605,13 @@ const App={
       if(!isYearStart&&!isBreakeven&&!isLast)continue;
       const cls=isBreakeven?'breakeven':r.diff>=0?'positive':'negative';
       const phase=r.diff>=0?'<span class="phase-indicator phase-profit"></span>Lucro':'<span class="phase-indicator phase-loss"></span>Prejuizo';
-      tableHtml+=`<tr class="${cls}"><td>${Math.floor(i/12)+1}</td><td>${r.mes}</td><td>${Utils.fmtC(r.aluguel)}</td><td>${Utils.fmtC(r.prestacao)}</td><td style="color:${r.diff>=0?'var(--green)':'var(--red)'};font-weight:600">${Utils.fmtC(r.diff)}</td><td style="color:${r.acumulado>=0?'var(--green)':'var(--red)'};font-weight:600">${Utils.fmtC(r.acumulado)}</td><td style="text-align:left">${isBreakeven?'<strong>EQUILIBRIO</strong>':phase}</td></tr>`;
+      const sinal=v=>v>=0?'pos':'neg';
+      tableHtml+=`<tr class="${cls}"><td class="num">${Math.floor(i/12)+1}</td>`
+        +`<td class="num">${r.mes}</td><td class="num">${Utils.fmtC(r.aluguel)}</td>`
+        +`<td class="num">${Utils.fmtC(r.prestacao)}</td>`
+        +`<td class="num forte ${sinal(r.diff)}">${Utils.fmtC(r.diff)}</td>`
+        +`<td class="num forte ${sinal(r.acumulado)}">${Utils.fmtC(r.acumulado)}</td>`
+        +`<td>${isBreakeven?'<strong>EQUILIBRIO</strong>':phase}</td></tr>`;
     }
     tableHtml+='</tbody></table>';
     Utils.getEl('investTableArea').innerHTML=tableHtml;
@@ -653,11 +666,11 @@ App.simularComparacao=function(){
 
   function diffCell(v1,v2,lowerIsBetter){
     const diff=v2-v1;
-    if(diff===0)return'<td class="comp-table-diff">—</td>';
+    if(diff===0)return'<td class="num comp-table-diff">—</td>';
     const favorable=lowerIsBetter?diff<0:diff>0;
     const cls=favorable?'pos':'neg';
     const sign=diff>0?'+':'';
-    return`<td class="comp-table-diff ${cls}">${sign}${Utils.fmtC(diff)}</td>`;
+    return`<td class="num comp-table-diff ${cls}">${sign}${Utils.fmtC(diff)}</td>`;
   }
   function winCls(v1,v2,lowerIsBetter,which){
     const w1=lowerIsBetter?v1<v2:v1>v2;
@@ -672,10 +685,10 @@ App.simularComparacao=function(){
     {label:'Taxa de Juros',v1:taxa1,v2:taxa2,fmt:v=>Utils.fmt(v)+'% a.a.',lower:true},
     {label:'Prazo',v1:prazo1,v2:prazo2,fmt:v=>Utils.fmtPrazo(v),lower:true,
      diffFmt:diff=>{
-       if(diff===0)return'<td class="comp-table-diff">—</td>';
+       if(diff===0)return'<td class="num comp-table-diff">—</td>';
        const sign=diff>0?'+':'-';
        const cls=diff<0?'pos':'neg';
-       return`<td class="comp-table-diff ${cls}">${sign}${Utils.fmtPrazo(Math.abs(diff))}</td>`;
+       return`<td class="num comp-table-diff ${cls}">${sign}${Utils.fmtPrazo(Math.abs(diff))}</td>`;
      }},
     {label:'Parcela Inicial',v1:p1first,v2:p2first,fmt:Utils.fmtC,lower:true},
     {label:'Ultima Parcela',v1:p1last,v2:p2last,fmt:Utils.fmtC,lower:true},
@@ -684,36 +697,37 @@ App.simularComparacao=function(){
     {label:'Total Pago',v1:tp1,v2:tp2,fmt:Utils.fmtC,lower:true},
     {label:'Prazo Final',v1:im1.parcelas.length,v2:im2.parcelas.length,fmt:v=>Utils.fmtPrazo(v),lower:true,
      diffFmt:diff=>{
-       if(diff===0)return'<td class="comp-table-diff">—</td>';
+       if(diff===0)return'<td class="num comp-table-diff">—</td>';
        const sign=diff>0?'+':'-';
        const cls=diff<0?'pos':'neg';
-       return`<td class="comp-table-diff ${cls}">${sign}${Utils.fmtPrazo(Math.abs(diff))}</td>`;
+       return`<td class="num comp-table-diff ${cls}">${sign}${Utils.fmtPrazo(Math.abs(diff))}</td>`;
      }}
   ];
 
-  let tableHtml='<h2>Comparativo</h2><table class="comp-table"><thead><tr>'
-    +'<th style="text-align:left">Metrica</th>'
-    +'<th class="im1">Imovel 1</th>'
-    +'<th class="im2">Imovel 2</th>'
-    +'<th>Diferenca</th></tr></thead><tbody>';
-  rows.forEach((r,i)=>{
-    const bg=i%2===0?'':'background:var(--bg)';
+  let tableHtml='<h2>Comparativo</h2><div class="tablewrap"><table><thead><tr>'
+    +'<th>Metrica</th>'
+    +'<th class="num im1">Imovel 1</th>'
+    +'<th class="num im2">Imovel 2</th>'
+    +'<th class="num">Diferenca</th></tr></thead><tbody>';
+  rows.forEach(r=>{
     const s1=winCls(r.v1,r.v2,r.lower,1);
     const s2=winCls(r.v1,r.v2,r.lower,2);
-    const sub1=r.sub1?`<div style="font-size:.65rem;color:var(--text2);font-weight:400">${r.sub1}</div>`:'';
-    const sub2=r.sub2?`<div style="font-size:.65rem;color:var(--text2);font-weight:400">${r.sub2}</div>`:'';
+    const sub1=r.sub1?`<div class="sub">${r.sub1}</div>`:'';
+    const sub2=r.sub2?`<div class="sub">${r.sub2}</div>`:'';
     const diffTd=r.diffFmt?r.diffFmt(r.v2-r.v1):diffCell(r.v1,r.v2,r.lower);
-    tableHtml+=`<tr style="${bg}"><td style="text-align:left;color:var(--text2)">${r.label}</td>`
-      +`<td style="${s1}">${r.fmt(r.v1)}${sub1}</td>`
-      +`<td style="${s2}">${r.fmt(r.v2)}${sub2}</td>`
+    tableHtml+=`<tr><td class="muted">${r.label}</td>`
+      +`<td class="num" style="${s1}">${r.fmt(r.v1)}${sub1}</td>`
+      +`<td class="num" style="${s2}">${r.fmt(r.v2)}${sub2}</td>`
       +`${diffTd}</tr>`;
   });
-  tableHtml+='</tbody></table>';
+  tableHtml+='</tbody></table></div>';
   Utils.getEl('compMetrics').innerHTML=tableHtml;
 
   Utils.getEl('compLegend').innerHTML=
-    `<span><span class="comp-legend-dot" style="background:var(--accent)"></span><strong>Imovel 1</strong> — ${Utils.fmtC(im1.valor)}</span>`+
-    `<span><span class="comp-legend-dot" style="background:var(--ok)"></span><strong>Imovel 2</strong> — ${Utils.fmtC(im2.valor)}</span>`;
+    `<span><span class="comp-legend-dot" style="background:var(--primary)"></span>`
+    +`<strong>Imovel 1</strong> — ${Utils.fmtC(im1.valor)}</span>`
+    +`<span><span class="comp-legend-dot" style="background:var(--ok)"></span>`
+    +`<strong>Imovel 2</strong> — ${Utils.fmtC(im2.valor)}</span>`;
 
   Charts._currentGroup='comp';
   if(!Charts.groups['comp'])Charts.groups['comp']=[];
@@ -721,7 +735,7 @@ App.simularComparacao=function(){
   const labels=[];
   for(let i=0;i<=maxAno;i++)labels.push(i);
   Charts.create('chComp',labels,[
-    Charts.buildDataset(im1.parcelas,'Imovel 1',C.accent,null,maxAno,'prestacaoBase'),
+    Charts.buildDataset(im1.parcelas,'Imovel 1',C.primary,null,maxAno,'prestacaoBase'),
     Charts.buildDataset(im2.parcelas,'Imovel 2',C.ok,null,maxAno,'prestacaoBase')
   ]);
 

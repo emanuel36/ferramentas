@@ -4,76 +4,59 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>ETF · Imposto</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="../assets/glass.css">
   <link rel="stylesheet" href="../assets/base.css">
-<script src="../assets/theme.js"></script>
+  <script src="../assets/theme.js"></script>
   <style>
     main { max-width: 600px; }
     .title { display: flex; align-items: center; gap: .6rem; }
     .title h1 { margin: 0; }
 
-    /* Cards de entrada e de resultado */
-    .card { padding: 0; overflow: hidden; }
-    .card-label { font: 600 1.05rem/1.25 var(--font-display); padding: .8rem 1rem 0;
-      margin: 0 0 .6rem; }
-    .card-body { padding: 0 1rem 1rem; }
-
+    /* Cards de entrada */
+    .card h2 { margin: 0 0 .75rem; }
     .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
-    .field { display: flex; flex-direction: column; min-width: 0; }
     .field-grid + .field-grid { margin-top: .75rem; }
+    .campo { display: flex; flex-direction: column; min-width: 0; }
     input[type="number"] { -moz-appearance: textfield; }
     input[type="number"]::-webkit-inner-spin-button,
     input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-    input.error { border-color: var(--miss); box-shadow: 0 0 0 3px var(--miss-soft); }
-    input.derived { color: var(--muted); background: var(--sunken); }
-    .err { display: none; font-size: 12.5px; color: var(--miss); margin-top: .2rem; }
+    input.error { border-color: var(--bad);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--bad) 13%, transparent); }
+    input.derived { color: var(--muted); background: var(--card); }
+    .err { display: none; font-size: 12.5px; color: var(--bad); margin-top: .2rem; }
     .err.visible { display: block; }
     .hint { font-size: 12.5px; color: var(--muted); min-height: 1.2em; margin-top: .2rem; }
-
-
-    .btn-calc { display: block; width: 100%; padding: .7rem 1rem; margin: 0 0 1.25rem;
-      font: 600 15px var(--font-body); color: var(--surface); background: var(--accent);
-      border: 1px solid var(--accent); border-radius: 8px; cursor: pointer; }
-    .btn-calc:hover { filter: brightness(1.08); }
+    .calc { display: block; width: 100%; padding-block: .7rem; }
 
     /* Resultado: aparece depois de calcular */
-    #result-panel { opacity: 0; transform: translateY(8px); pointer-events: none;
-      transition: opacity .3s ease, transform .3s ease; }
+    #result-panel { margin-top: 1.25rem; opacity: 0; transform: translateY(8px);
+      pointer-events: none;
+      transition: opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-out); }
     #result-panel.visible { opacity: 1; transform: none; pointer-events: auto; }
+    #result-panel h2 { margin: 1.5rem 0 .75rem; }
 
-    .darf-card { background: var(--surface); border: 1px solid var(--line);
-      border-top: 4px solid var(--accent); border-radius: 10px; padding: .9rem 1rem;
-      margin: 0 0 1rem; }
-    .darf-hero-label { font-size: 12.5px; color: var(--muted); }
-    .darf-amount { font: 600 2.2rem/1.1 var(--font-display); font-variant-numeric: tabular-nums; }
-    .darf-amount.profit { color: var(--miss); }
-    .darf-amount.zero { color: var(--ok); }
-    .loss-alert { display: none; margin: 0 0 1rem; padding: .5rem .8rem; border-radius: 8px;
-      font-size: 14px; color: var(--miss); background: var(--miss-soft); }
-    .loss-alert.visible { display: block; }
+    /* Valores em KPIs; lucro e prejuízo trocam o gradiente pela cor de status */
+    .kpi b { font-variant-numeric: tabular-nums; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .stats b { font-size: 1.15rem; white-space: normal; overflow-wrap: anywhere; }
+    .kpi b.pos, .kpi b.neg, .kpi b.profit, .kpi b.zero { background: none; }
+    .kpi b.pos, .kpi b.zero { color: var(--ok); }
+    .kpi b.neg, .kpi b.profit { color: var(--bad); }
+    .loss-alert { display: none; margin: 1rem 0 0; }
+    .loss-alert.visible { display: flex; }
 
-    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line);
-      border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
-    .stat { display: flex; flex-direction: column; padding: .6rem .8rem;
-      background: var(--surface); }
-    .stat-label { font-size: 12.5px; color: var(--muted); }
-    .stat-value { font: 600 1.1rem var(--font-display); font-variant-numeric: tabular-nums; }
-    .stat-value.pos { color: var(--ok); }
-    .stat-value.neg { color: var(--miss); }
-
-    .stacked-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden;
-      background: var(--sunken); margin: .9rem 0 .4rem; }
-    .bar-seg { transition: flex .4s ease; min-width: 0; }
-    .bar-cost, .dot-cost { background: var(--accent); }
+    /* Barra empilhada da venda: custo, lucro e IR */
+    .stacked-bar { display: flex; height: 8px; border-radius: var(--r); overflow: hidden;
+      background: var(--card); margin: .9rem 0 .4rem; }
+    .bar-seg { transition: flex var(--dur) var(--ease-out); min-width: 0; }
+    .bar-cost, .dot-cost { background: var(--primary); }
     .bar-profit, .dot-profit { background: var(--ok); }
-    .bar-tax, .dot-tax { background: var(--miss); }
+    .bar-tax, .dot-tax { background: var(--bad); }
     .bar-legend { display: flex; gap: 1rem; font-size: 12.5px; color: var(--muted); }
-    .legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 2px;
+    .legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%;
       margin-right: .35rem; vertical-align: middle; }
 
-    @media (max-width: 380px) { .field-grid, .stat-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 380px) { .field-grid, .stats { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -86,7 +69,7 @@
     <a href="./" aria-current="page">IR ETF</a>
     <a href="../roteiro-viagem/">Roteiro</a>
   </nav>
-  <button class="theme-btn" id="tema" type="button"></button>
+  <button class="btn" id="tema" type="button"></button>
 </header>
 
 <main>
@@ -100,15 +83,15 @@
 
   <!-- Card Carteira -->
   <div class="card">
-    <div class="card-label">Carteira</div>
-    <div class="card-body">
+    <h2>Carteira</h2>
+    <div>
       <div class="field-grid">
-        <div class="field">
+        <div class="campo">
           <label for="avgPrice">Preço médio</label>
           <input type="number" id="avgPrice" step="0.01" min="0.01" placeholder="0,00" required>
           <span class="err" id="avgPriceErr">Valor inválido</span>
         </div>
-        <div class="field">
+        <div class="campo">
           <label for="totalQty">Qtd em carteira</label>
           <input type="number" id="totalQty" step="1" min="1" placeholder="0" required>
           <span class="err" id="totalQtyErr">Qtd inválida</span>
@@ -119,22 +102,22 @@
 
   <!-- Card Operação -->
   <div class="card">
-    <div class="card-label">Operação</div>
-    <div class="card-body">
+    <h2>Operação</h2>
+    <div>
       <div class="field-grid">
-        <div class="field">
+        <div class="campo">
           <label for="currentPrice">Preço atual</label>
           <input type="number" id="currentPrice" step="0.01" min="0.01" placeholder="0,00" required>
           <span class="err" id="currentPriceErr">Valor inválido</span>
         </div>
       </div>
       <div class="field-grid">
-        <div class="field">
+        <div class="campo">
           <label for="sellQty">Qtd a vender</label>
           <input type="number" id="sellQty" step="1" min="1" placeholder="0" required>
           <span class="err" id="sellQtyErr">Qtd inválida</span>
         </div>
-        <div class="field">
+        <div class="campo">
           <label for="sellValue">Valor a vender (R$)</label>
           <input type="number" id="sellValue" step="0.01" min="0.01" placeholder="0,00">
           <span class="hint" id="sellValueHint"></span>
@@ -143,84 +126,49 @@
     </div>
   </div>
 
-  <button type="submit" class="btn-calc">Calcular Imposto</button>
+  <button type="submit" class="btn primary calc">Calcular Imposto</button>
 
 </form>
 
-<!-- Result -->
-<section id="result-panel" style="margin-top:1.25rem">
+<!-- Resultado -->
+<section id="result-panel">
 
-  <!-- DARF hero -->
-  <div class="darf-card">
-    <div class="darf-left">
-      <div class="darf-hero-label">DARF a pagar</div>
-      <div class="darf-amount" id="taxAmount">—</div>
-    </div>
+  <!-- DARF em destaque -->
+  <div class="kpis">
+    <div class="kpi"><small>DARF a pagar</small><b class="darf-amount" id="taxAmount">—</b></div>
   </div>
 
-  <!-- Loss alert -->
-  <div class="loss-alert" id="lossAlert">
-    Prejuízo: <strong id="lossValue"></strong> — sem imposto devido
+  <!-- Aviso de prejuízo -->
+  <div class="callout loss-alert" id="lossAlert" style="--c: var(--bad)">
+    <b>Prejuízo</b><span><strong id="lossValue"></strong> — sem imposto devido</span>
   </div>
 
-  <!-- Card Esta venda -->
-  <div class="card">
-    <div class="card-label">Esta venda</div>
-    <div class="card-body">
-      <div class="stat-grid">
-        <div class="stat">
-          <span class="stat-label">Venda bruta</span>
-          <span class="stat-value" id="resVenda">—</span>
-        </div>
-        <div class="stat">
-          <span class="stat-label">Custo das cotas</span>
-          <span class="stat-value" id="resCusto">—</span>
-        </div>
-        <div class="stat">
-          <span class="stat-label">Lucro / Prejuízo</span>
-          <span class="stat-value" id="resLucro">—</span>
-        </div>
-        <div class="stat">
-          <span class="stat-label">Rentabilidade</span>
-          <span class="stat-value" id="resRent">—</span>
-        </div>
-      </div>
-      <div class="stacked-bar">
-        <div class="bar-seg bar-cost"   id="barVendaCost"   style="flex:0"></div>
-        <div class="bar-seg bar-profit" id="barVendaProfit" style="flex:0"></div>
-        <div class="bar-seg bar-tax"    id="barVendaTax"    style="flex:0"></div>
-      </div>
-      <div class="bar-legend">
-        <span><span class="legend-dot dot-cost"></span>Custo</span>
-        <span><span class="legend-dot dot-profit"></span>Lucro</span>
-        <span><span class="legend-dot dot-tax"></span>IR</span>
-      </div>
-    </div>
+  <h2>Esta venda</h2>
+  <div class="kpis stats">
+    <div class="kpi"><small>Venda bruta</small><b class="stat-value" id="resVenda">—</b></div>
+    <div class="kpi"><small>Custo das cotas</small><b class="stat-value" id="resCusto">—</b></div>
+    <div class="kpi"><small>Lucro / Prejuízo</small><b class="stat-value" id="resLucro">—</b></div>
+    <div class="kpi"><small>Rentabilidade</small><b class="stat-value" id="resRent">—</b></div>
+  </div>
+  <div class="stacked-bar">
+    <div class="bar-seg bar-cost"   id="barVendaCost"   style="flex:0"></div>
+    <div class="bar-seg bar-profit" id="barVendaProfit" style="flex:0"></div>
+    <div class="bar-seg bar-tax"    id="barVendaTax"    style="flex:0"></div>
+  </div>
+  <div class="bar-legend">
+    <span><span class="legend-dot dot-cost"></span>Custo</span>
+    <span><span class="legend-dot dot-profit"></span>Lucro</span>
+    <span><span class="legend-dot dot-tax"></span>IR</span>
   </div>
 
-  <!-- Card Carteira pós-venda -->
-  <div class="card">
-    <div class="card-label">Carteira pós-venda</div>
-    <div class="card-body">
-      <div class="stat-grid">
-        <div class="stat">
-          <span class="stat-label">Valor atual</span>
-          <span class="stat-value" id="resSaldo">—</span>
-        </div>
-        <div class="stat">
-          <span class="stat-label">Custo total</span>
-          <span class="stat-value" id="resCustoTotal">—</span>
-        </div>
-        <div class="stat">
-          <span class="stat-label">Valor líquido (sem IR)</span>
-          <span class="stat-value" id="resSaldoLiquido">—</span>
-        </div>
-        <div class="stat">
-          <span class="stat-label">IR se vender tudo</span>
-          <span class="stat-value" id="resImpostoRestante">—</span>
-        </div>
-      </div>
-    </div>
+  <h2>Carteira pós-venda</h2>
+  <div class="kpis stats">
+    <div class="kpi"><small>Valor atual</small><b class="stat-value" id="resSaldo">—</b></div>
+    <div class="kpi"><small>Custo total</small><b class="stat-value" id="resCustoTotal">—</b></div>
+    <div class="kpi"><small>Valor líquido (sem IR)</small>
+      <b class="stat-value" id="resSaldoLiquido">—</b></div>
+    <div class="kpi"><small>IR se vender tudo</small>
+      <b class="stat-value" id="resImpostoRestante">—</b></div>
   </div>
 
 </section>
