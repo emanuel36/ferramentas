@@ -10,14 +10,23 @@
   const apply = (tema) => {
     if (root.dataset.theme === tema) return;
     root.dataset.theme = tema;
+    pintaBarra();
     dispatchEvent(new CustomEvent("temachange", { detail: tema }));
   };
   root.dataset.theme = read();
+
+  // Barra do navegador e do app instalado na cor do fundo do tema
+  const pintaBarra = () => {
+    const meta = document.querySelector('meta[name="theme-color"]');
+    const bg = getComputedStyle(root).getPropertyValue("--bg").trim();
+    if (meta && bg) meta.content = bg;
+  };
 
   // Outra aba ou uma miniatura da página inicial trocou o tema
   addEventListener("storage", (e) => { if (e.key === KEY) apply(read()); });
 
   addEventListener("DOMContentLoaded", () => {
+    pintaBarra();
     const btn = document.getElementById("tema");
     if (!btn) return;
     const label = () => {

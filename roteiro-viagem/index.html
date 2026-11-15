@@ -2,7 +2,8 @@
 <html lang="pt-pt">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,
+        user-scalable=no, viewport-fit=cover">
     <title>Europa 2026 - Guia de Bolso</title>
     
     <!-- PWA Meta Tags for iOS -->
@@ -11,8 +12,8 @@
     <meta name="apple-mobile-web-app-title" content="Europa 2026">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Europa 2026">
-    <meta name="theme-color" content="#1a1a1a">
-    <meta name="msapplication-TileColor" content="#1a1a1a">
+    <meta name="theme-color" content="#151515">
+    <meta name="msapplication-TileColor" content="#151515">
     <meta name="msapplication-config" content="browserconfig.xml">
     
     <!-- Apple Touch Icons -->
@@ -27,841 +28,156 @@
     <!-- Manifest for PWA -->
     <link rel="manifest" href="data:application/json,{%22name%22:%22Europa%202026%20-%20Guia%20de%20Bolso%22,%22short_name%22:%22Europa%202026%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%231a1a1a%22,%22theme_color%22:%22%231a1a1a%22,%22icons%22:[{%22src%22:%22data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270%200%20192%20192%27><rect width=%27192%27 height=%27192%27 fill=%27%231a1a1a%27/><text x=%2796%27 y=%27120%27 font-size=%27128%27 text-anchor=%27middle%27 fill=%27white%27>🇪🇺</text></svg>%22,%22sizes%22:%22192x192%22,%22type%22:%22image/svg+xml%22}]}">
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+    <link rel="stylesheet" href="../assets/glass.css">
     <link rel="stylesheet" href="../assets/base.css">
     <script src="../assets/theme.js"></script>
     <style>
-        /* CONFIGURAÇÃO BASE IPHONE */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        
-        body, html {
-            width: 100%;
-            height: 100%;
-            font-family: 'Inter', sans-serif;
-            background: #000000;
-            overflow: hidden;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .slide {
-            width: 100vw;
-            height: 100vh;
-            scroll-snap-align: start;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            padding: 20px 0;
-            background: transparent;
-            flex-shrink: 0;
-        }
-
-        .content {
-            width: 90%;
-            max-width: 420px;
-            background: rgba(30, 30, 30, 1);
-            padding: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            position: relative;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            min-height: 200px;
-            max-height: 90vh;
-            height: auto;
-        }
-
-        .title-emoji {
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 8px;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .title-emoji .emoji {
-            font-size: 36px;
-        }
-
-        h2 {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: #ffffff;
-        }
-
-        .date-pill {
-            display: flex;
-            align-items: center;
-            background: linear-gradient(135deg, #495057 0%, #6c757d 100%);
-            color: white;
-            padding: 6px 10px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 3px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .divider {
-            width: 4px;
-            height: 4px;
-            background: rgba(255,255,255,0.6);
-            border-radius: 50%;
-            margin: 0 8px;
-        }
-
-        /* Estilos para lista de itinerário */
-        .itinerary-list {
-            list-style: none;
-            padding: 0;
-        }
-        .itinerary-list li {
-            display: flex;
-            align-items: center;
-            padding: 6px 0;
-            border-bottom: 1px solid #333;
-            color: #ffffff;
-        }
-        .itinerary-icon {
-            width: 24px;
-            height: 24px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: 10px;
-            font-size: 12px;
-        }
-        .itinerary-content {
-            flex: 1;
-        }
-        .itinerary-city {
-            font-weight: 500;
-            margin-bottom: 0;
-            font-size: 13px;
-        }
-        .itinerary-activity {
-            font-size: 12px;
-            color: #cccccc;
-        }
-        .itinerary-date {
-            background: #495057;
-            padding: 2px 6px;
-            border-radius: 6px;
-            font-size: 9px;
-            text-align: right !important;
-            min-width: 38px;
-            margin-right: 12px;
-        }
-
-        /* Estilos para Títulos */
-        .table-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #ffffff;
-            margin-bottom: 8px;
-            text-align: center;
-        }
-
-        /* Estilos para Informações de Viagem */
-        .travel-table {
-            width: 100%;
-            background: rgba(40, 40, 40, 0.96);
-            border-radius: 12px;
-            overflow: hidden;
-            font-size: 11px;
-            table-layout: auto;
-            margin-bottom: 8px;
-        }
-
-        /* Specific styles for hotels table to auto-adjust columns */
-        .hotels-table {
-            table-layout: auto !important;
-            width: auto !important;
-            min-width: 100%;
-        }
-
-        .hotels-table th:first-child,
-        .hotels-table td:first-child {
-            text-align: left !important;
-            white-space: nowrap;
-            width: auto;
-        }
-
-        .hotels-table th:nth-child(2),
-        .hotels-table td:nth-child(2) {
-            text-align: center !important;
-            width: auto;
-            min-width: 60px;
-        }
-
-        .hotels-table th:last-child,
-        .hotels-table td:last-child {
-            text-align: right !important;
-            width: auto;
-            min-width: 70px;
-            white-space: nowrap;
-        }
-
-        .travel-table th {
-            background: #2d2d2d;
-            color: #ffffff;
-            padding: 6px 6px;
-            text-align: center;
-            font-weight: 600;
-            font-size: 10px;
-        }
-
-        .travel-table td {
-            padding: 6px 8px;
-            border-bottom: 1px solid #495057;
-            color: #ffffff;
-            vertical-align: middle;
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .route-cell {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0;
-        }
-
-        .route-cell .flag {
-            width: 20px;
-            margin-right: 2px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-
-        .route-cell .city-code {
-            width: 28px;
-            font-size: 11px;
-            font-weight: 600;
-            text-align: center;
-            flex-shrink: 0;
-        }
-
-        .route-cell .transport-icon {
-            width: 24px;
-            margin: 0;
-        }
-
-        .travel-table tr:nth-child(even) td {
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .transport-icon {
-            font-size: 14px;
-            margin: 0 4px;
-            vertical-align: -2px;
-            display: inline-block;
-            width: 20px;
-            text-align: center;
-        }
-
-        .flag {
-            font-size: 16px;
-            vertical-align: middle;
-            display: inline-block;
-            margin-right: 8px;
-        }
-
-        .time-cell {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            color: #a5b4fc;
-            white-space: nowrap;
-            text-align: right;
-            background: rgba(165, 180, 252, 0.1) !important;
-            font-weight: 600;
-        }
-
-        .duration-cell {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            color: #10b981;
-            white-space: nowrap;
-            text-align: right;
-            line-height: 1;
-            background: rgba(16, 185, 129, 0.1) !important;
-        }
-
-        .day-cell {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            color: #f59e0b;
-            font-weight: 600;
-            text-align: right;
-            background: rgba(245, 158, 11, 0.1) !important;
-        }
-
-        /* Estilos para Gráfico de Barras */
-        .travel-chart {
-            margin-top: 0;
-            padding: 12px;
-            background: rgba(30, 30, 30, 0.5);
-            border-radius: 8px;
-        }
-
-        .chart-title {
-            font-size: 12px;
-            font-weight: 600;
-            color: #ffffff;
-            margin-bottom: 12px;
-            text-align: center;
-        }
-
-        .chart-bars {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .chart-bar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .bar-label {
-            font-size: 9px;
-            color: #d4d4d8;
-            width: 85px;
-            flex-shrink: 0;
-            font-family: 'JetBrains Mono', monospace;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 3px 8px;
-            border-radius: 3px;
-            text-align: left;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 4px;
-        }
-
-        .bar-label .flag {
-            font-size: 10px;
-            margin-right: 0;
-        }
-
-        .bar-container {
-            flex: 1;
-            height: 16px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 7px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
-            border-radius: 7px;
-            transition: width 0.3s ease;
-        }
-
-        .bar-fill.travel-bar {
-            background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
-        }
-
-        .bar-value {
-            position: absolute;
-            right: 4px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 8px;
-            font-family: 'JetBrains Mono', monospace;
-            color: #ffffff;
-            font-weight: 600;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 2px 4px;
-            border-radius: 2px;
-        }
-
-        /* Estilos para Resumo */
-        .travel-summary {
-            margin-top: 0;
-            margin-bottom: 8px;
-            padding: 6px;
-            background: rgba(30, 30, 30, 0.5);
-            border-radius: 8px;
-        }
-
-        .summary-title {
-            font-size: 10px;
-            font-weight: 600;
-            color: #ffffff;
-            margin-bottom: 4px;
-            text-align: center;
-        }
-
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 4px;
-        }
-
-        .summary-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 3px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 6px;
-        }
-
-        .summary-icon {
-            font-size: 14px;
-            margin-bottom: 2px;
-        }
-
-        .summary-value {
-            font-size: 11px;
-            font-weight: 600;
-            color: #10b981;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .summary-label {
-            font-size: 7px;
-            color: #9ca3af;
-            margin-top: 1px;
-        }
-
-        .scroll-list {
-            flex: 1;
-            overflow-y: auto;
-            padding-right: 8px;
-            margin-bottom: 8px;
-            max-height: 60vh;
-        }
-
-        .scroll-list::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .scroll-list::-webkit-scrollbar-track {
-            background: #2d2d2d;
-            border-radius: 3px;
-        }
-
-        .scroll-list::-webkit-scrollbar-thumb {
-            background: #6c757d;
-            border-radius: 3px;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        ul li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 6px 10px;
-            margin-bottom: 3px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 12px;
-            font-size: 13px;
-            line-height: 1.3;
-            color: #ffffff;
-        }
-
-        ul li:hover {
-            transform: translateX(4px);
-            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
-        }
-
-        .day-header {
-            font-size: 14px;
-            font-weight: 700;
-            color: #ffffff;
-            margin: 10px 0 6px 0;
-            padding: 4px 0;
-            border-bottom: 2px solid #495057;
-        }
-
-        /* MODELO 1: Pills Sólidas com Amarelo para Marcados */
-        .time-badge-icon {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            background: rgba(59, 130, 246, 0.25);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 700;
-            font-family: 'JetBrains Mono', monospace;
-            border: none;
-        }
-
-        .time-badge-icon.schedule {
-            background: rgba(251, 191, 36, 0.25);
-            color: #ffffff;
-        }
-
-        /* Badge para chegada e partida */
-        .time-badge-minimal-hover {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            background: rgba(34, 197, 94, 0.25);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 700;
-            font-family: 'JetBrains Mono', monospace;
-            border: none;
-            position: relative;
-        }
-
-        .time-badge-minimal-hover.departure {
-            background: rgba(239, 68, 68, 0.25);
-            color: white;
-        }
-
-        /* Indicador visual de dia seguinte */
-        .next-day-indicator {
-            display: inline-flex;
-            align-items: center;
-            background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
-            color: white;
-            padding: 2px 6px;
-            border-radius: 8px;
-            font-size: 9px;
-            font-weight: 600;
-            margin-left: 6px;
-        }
-
-        /* Item de tempo na lista */
-        .time-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 6px 10px;
-            margin-bottom: 3px;
-            background: repeating-linear-gradient(45deg, rgba(34, 197, 94, 0.05), rgba(34, 197, 94, 0.05) 2px, rgba(34, 197, 94, 0.08) 2px, rgba(34, 197, 94, 0.08) 4px);
-            border-radius: 12px;
-            font-size: 13px;
-            line-height: 1.3;
-            color: #ffffff;
-            position: relative;
-            border: 1px solid rgba(34, 197, 94, 0.3);
-        }
-        
-        .time-item.departure {
-            background: repeating-linear-gradient(45deg, rgba(239, 68, 68, 0.05), rgba(239, 68, 68, 0.05) 2px, rgba(239, 68, 68, 0.08) 2px, rgba(239, 68, 68, 0.08) 4px);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-        }
-        
-        /* Reset para itens que não são de tempo */
-        ul li:not(.time-item) {
-            display: block;
-            border-left: 4px solid #495057;
-            padding-left: 10px;
-        }
-        
-        ul li:not(.time-item) .time-badge-icon {
-            float: right;
-            margin-top: 2px;
-        }
-
-        .sub-item {
-            margin-left: 25px;
-            background: rgba(255,255,255,0.08);
-            font-size: 12px;
-        }
-
-        .bonus-section {
-            margin-top: auto;
-            padding-top: 12px;
-            border-top: 2px solid #495057;
-        }
-
-        .bonus-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: #cccccc;
-            margin-bottom: 6px;
-        }
-
-        .bonus-items {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .bonus-tag {
-            background: linear-gradient(135deg, #495057 0%, #6c757d 100%);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 16px;
-            font-size: 11px;
-            font-weight: 500;
-        }
-
-        /* Container para slides horizontais */
-        .slides-container {
-            display: flex;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-            scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
-            overflow-x: auto;
-            overflow-y: hidden;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        /* Indicadores de slide */
-        .slide-indicators {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 8px;
-            z-index: 100;
-        }
-
-        .indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .indicator.active {
-            background: rgba(255, 255, 255, 0.8);
-            transform: scale(1.2);
-        }
-
-        /* Botões de navegação */
-        .nav-button {
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            border-radius: 50%;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            transition: all 0.3s ease;
-            opacity: 0.5;
-        }
-
-        .nav-button:hover {
-            background: rgba(255, 255, 255, 0.2);
-            opacity: 1;
-        }
-
-        .nav-button.prev {
-            left: 20px;
-        }
-
-        .nav-button.next {
-            right: 20px;
-        }
-
-        /* Botões de controle */
-        .control-buttons {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            display: flex;
-            gap: 15px;
-            z-index: 1000;
-        }
-
-        .control-btn {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            border: none;
-            background: rgba(255, 255, 255, 0.9);
-            color: #333333;
-            font-size: 24px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            transition: all 0.3s ease;
-        }
-
-        .control-btn:hover {
-            transform: scale(1.1);
-            background: rgba(255, 255, 255, 1);
-        }
-
-        /* Tema claro */
-        body.light-theme {
-            background: #ffffff;
-        }
-
-        body.light-theme .control-btn {
-            background: rgba(30, 30, 30, 0.9);
-            color: white;
-        }
-
-        body.light-theme .control-btn:hover {
-            background: rgba(30, 30, 30, 1);
-        }
-
-        /* Flex row helper for list items with time badges */
-        .flex-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* Time badge for inline schedule display */
-        .time-badge-inline {
-            font-size: 12px;
-            font-weight: 700;
-            font-family: 'JetBrains Mono', monospace;
-            color: #ffffff;
-            padding: 2px 8px;
-            background: rgba(34, 197, 94, 0.25);
-            border-radius: 6px;
-        }
-
-        .time-badge-inline.departure {
-            background: rgba(239, 68, 68, 0.25);
-        }
-
-        </style>
-    <style>
-        /* Visual do site (assets/base.css) aplicado ao carrossel: mesmas cores, fontes e
-           cartões das outras páginas. O formato da página continua o mesmo. */
-        body, html { background: var(--ground); color: var(--ink); font-family: var(--font-body); }
-        .slides-container * { font-family: var(--font-body); }
-
-        .content { background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
-            box-shadow: none; }
-        h2, .title-emoji { color: var(--ink); font-family: var(--font-display); font-weight: 600; }
-        .table-title { color: var(--ink); font-family: var(--font-display); font-size: 15px; }
-
-        .date-pill { background: var(--accent-soft); color: var(--accent); border-radius: 6px;
-            letter-spacing: .03em; }
-
-        ul li { background: var(--sunken); color: var(--ink); border-radius: 6px; }
-        ul li:hover { transform: none; box-shadow: none; }
-        ul li:not(.time-item) { border-left: 3px solid var(--line); }
-        .sub-item { background: var(--surface); color: var(--muted); }
-        .time-item { background: var(--ok-soft); border: 1px solid var(--ok); color: var(--ink); }
-        .time-item.departure { background: var(--miss-soft); border-color: var(--miss); }
-
-        .time-badge-icon, .time-badge-minimal-hover, .time-badge-inline, .time-cell, .day-cell,
-        .city-code, .bar-label, .bar-value { font-family: var(--font-mono) !important; }
-        .time-badge-icon { background: var(--accent-soft); color: var(--accent); font-weight: 500; }
-        .time-badge-icon.schedule { background: var(--warn-soft); color: var(--warn); }
-        .time-badge-minimal-hover, .time-badge-inline { background: var(--ok-soft); color: var(--ok);
-            font-weight: 500; }
-        .time-badge-minimal-hover.departure, .time-badge-inline.departure {
-            background: var(--miss-soft); color: var(--miss); }
-
-        .bonus-section { border-top: 1px solid var(--line); }
-        .bonus-title { color: var(--muted); }
-        .bonus-tag { background: var(--sunken); color: var(--ink); border: 1px solid var(--line); }
-
-        .travel-table { background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
-            border-collapse: separate; border-spacing: 0; }
-        .travel-table th { background: var(--sunken); color: var(--muted); }
-        .travel-table td, .travel-table tr:nth-child(even) td { background: transparent;
-            color: var(--ink); border-bottom: 1px solid var(--line); }
-        .travel-table tbody tr:last-child td { border-bottom: 0; }
-        .time-cell { color: var(--muted); background: none !important; font-weight: 500; }
-        .day-cell { color: var(--accent); background: none !important; }
-        .hotels-table tr:last-child td { border-top: 2px solid var(--muted); font-weight: 600; }
-
-        .scroll-list::-webkit-scrollbar-track { background: var(--sunken); }
-        .scroll-list::-webkit-scrollbar-thumb { background: var(--line); }
-
-        .indicator { background: var(--line); }
-        .indicator.active { background: var(--accent); }
-        .nav-button { background: color-mix(in srgb, var(--surface) 55%, transparent);
-            border: 1px solid var(--line); color: var(--ink); opacity: .6; }
-        .nav-button:hover { background: var(--sunken); opacity: 1; }
-        .control-btn, body.light-theme .control-btn { background: var(--surface); color: var(--ink);
-            border: 1px solid var(--line); box-shadow: none; font-size: 22px; }
-        .control-btn:hover, body.light-theme .control-btn:hover { background: var(--sunken);
-            transform: none; }
+        /* Carrossel: cada cidade é um slide da largura da tela, com rolagem horizontal e
+           encaixe. Cores, fontes e componentes vêm do Glass (assets/glass.css). */
+        * { -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+        html, body { width: 100%; height: 100%; overflow: hidden; }
+        html { background: var(--bg); }
+
+        .slides-container { display: flex; width: 100vw; height: 100vh; overflow-x: auto;
+            overflow-y: hidden; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch; }
 
         /* Cada cidade ocupa a tela inteira e rola por inteiro (sem caixa interna).
            Cidade curta: o cartão fica centralizado; longa: começa no topo e rola. */
-        .slide { height: 100dvh; align-items: flex-start; overflow-y: auto; overscroll-behavior: contain;
+        .slide { position: relative; flex-shrink: 0; display: flex; align-items: flex-start;
+            justify-content: center; width: 100vw; height: 100vh; height: 100dvh;
+            scroll-snap-align: start; overflow-x: hidden; overflow-y: auto;
+            overscroll-behavior: contain;
             padding: 16px 0 calc(84px + env(safe-area-inset-bottom, 0px)); }
-        .content { max-height: none; min-height: 0; margin-block: auto; }
-        .bonus-section { margin-top: 12px; }
+        .content { position: relative; z-index: 2; display: flex; flex-direction: column;
+            width: 90%; max-width: 420px; margin: auto 0; }
+
+        h2 { margin: 0 0 12px; font-size: 24px; }
+        .title-emoji { display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
+            font-size: 32px; }
+        .title-emoji .emoji { font-size: 36px; }
+        .table-title { margin-bottom: 8px; font-size: 15px; font-weight: 600;
+            text-align: center; }
+        .scroll-list { margin-bottom: 8px; }
+        .flag { display: inline-block; margin-right: 8px; font-size: 16px;
+            vertical-align: middle; }
+        .transport-icon { display: inline-block; width: 20px; margin: 0 4px; font-size: 14px;
+            text-align: center; vertical-align: -2px; }
+
+        /* Faixa de cada dia: texto na cor do texto; --c muda o fundo (feriado) */
+        .date-pill { --c: var(--primary); display: flex; align-items: center; width: 100%;
+            margin-bottom: 3px; padding: 6px 10px; border-radius: var(--r);
+            font-size: 13px; font-weight: 600; letter-spacing: .03em; color: var(--fg);
+            background: color-mix(in srgb, var(--c) 13%, transparent); }
+
+        /* Itens do dia; chegada e partida em verde e vermelho */
+        ul { list-style: none; }
+        ul li { display: flex; justify-content: space-between; align-items: center; gap: 8px;
+            margin-bottom: 3px; padding: 6px 10px; border-radius: var(--r);
+            font-size: 13px; line-height: 1.3; background: var(--card); }
+        ul li:not(.time-item) { border-left: 3px solid var(--line2); }
+        .flex-row { flex: 1; display: flex; justify-content: space-between; align-items: center;
+            gap: 8px; }
+        .sub-item { margin-left: 25px; font-size: 12px; color: var(--muted);
+            background: var(--surface); }
+        .time-item { --c: var(--ok); display: flex; justify-content: space-between;
+            align-items: center; background: color-mix(in srgb, var(--c) 13%, transparent);
+            border: 1px solid color-mix(in srgb, var(--c) 35%, transparent); }
+        .time-item.departure { --c: var(--bad); }
+
+        /* Horários (.badge do Glass): azul funcionamento, amarelo marcado,
+           verde chegada ou ida, vermelho partida ou volta */
+        .time-badge-icon, .time-badge-minimal-hover, .time-badge-inline {
+            font-family: var(--mono); }
+        .time-badge-icon.schedule { --c: var(--warn); }
+        .time-badge-minimal-hover, .time-badge-inline { --c: var(--ok); }
+        .time-badge-minimal-hover.departure, .time-badge-inline.departure { --c: var(--bad); }
+
+        .bonus-section { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line2); }
+        .bonus-title { margin-bottom: 6px; font-size: 13px; font-weight: 600;
+            color: var(--muted); }
+        .bonus-tag { --c: var(--violet); }
+
+        /* Tabelas do primeiro slide: compactas para caber cinco colunas no celular */
+        .travel-table { margin-bottom: 8px; font-size: 11px; }
+        .travel-table th { padding: 6px 4px; font-size: 10px; text-align: center; }
+        .travel-table td { padding: 6px 4px; vertical-align: middle; }
+        .time-cell { font: 500 10px var(--mono); color: var(--muted); white-space: nowrap;
+            text-align: right; }
+        .day-cell { font: 600 11px var(--mono); color: var(--primary); text-align: right; }
+        .route-cell { display: flex; align-items: center; justify-content: center; }
+        .route-cell .flag { flex-shrink: 0; width: 20px; margin-right: 2px; text-align: center; }
+        .route-cell .city-code { flex-shrink: 0; width: 28px; font: 600 11px var(--mono);
+            text-align: center; }
+        .route-cell .transport-icon { width: 24px; margin: 0; }
+        .hotels-table { table-layout: auto; min-width: 100%; }
+        .hotels-table th:first-child, .hotels-table td:first-child { text-align: left; }
+        .hotels-table th:nth-child(2), .hotels-table td:nth-child(2) { min-width: 60px;
+            text-align: center; }
+        .hotels-table th:last-child, .hotels-table td:last-child { min-width: 70px;
+            text-align: right; white-space: nowrap; }
+        .hotels-table tr:last-child td { border-top: 2px solid var(--muted); font-weight: 600; }
+
+        /* Tempo por cidade (slide oculto) */
+        .travel-chart { padding: 12px; border-radius: var(--r); background: var(--card); }
+        .chart-bars { display: flex; flex-direction: column; gap: 6px; }
+        .chart-bar { display: flex; align-items: center; gap: 8px; }
+        .bar-label { display: flex; align-items: center; gap: 4px; flex-shrink: 0; width: 85px;
+            padding: 3px 8px; border-radius: var(--r); font: 9px var(--mono); color: var(--muted);
+            background: var(--line2); }
+        .bar-label .flag { margin-right: 0; font-size: 10px; }
+        .bar-container { position: relative; flex: 1; height: 16px; overflow: hidden;
+            border-radius: 9999px; background: var(--line2); }
+        .bar-fill { height: 100%; border-radius: 9999px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: width var(--dur) var(--ease-out); }
+        .bar-fill.travel-bar { background: var(--warn); }
+        .bar-value { position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+            padding: 2px 4px; border-radius: var(--r); font: 600 8px var(--mono); color: var(--fg);
+            background: color-mix(in srgb, var(--bg) 50%, transparent); }
 
         /* Fundo do rodapé: o texto que passa por baixo some antes dos botões */
         body::after { content: ""; position: fixed; left: 0; right: 0; bottom: 0; z-index: 99;
             height: calc(76px + env(safe-area-inset-bottom, 0px)); pointer-events: none;
-            background: linear-gradient(to bottom, transparent, var(--ground) 40%); }
-        .scroll-list { flex: none; max-height: none; overflow: visible; padding-right: 0; }
+            background: linear-gradient(to bottom, transparent, var(--bg) 40%); }
 
-        /* Rodapé fixo: ‹ bolinhas tema › — fora do conteúdo */
-        .nav-button { top: auto; bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-            transform: none; width: 44px; height: 44px; opacity: .9; font-size: 18px; }
-        .nav-button.prev { left: 5vw; }
-        .nav-button.next { right: 5vw; }
-        .slide-indicators { bottom: calc(32px + env(safe-area-inset-bottom, 0px)); }
-        .control-buttons { bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-            right: calc(5vw + 52px); }
-        .control-btn { width: 44px; height: 44px; font-size: 18px; }
+        /* Rodapé fixo: ‹ bolinhas tema ›, fora do conteúdo */
+        .rodape { position: fixed; left: 5vw; right: 5vw; z-index: 100; display: flex;
+            align-items: center; gap: 8px;
+            bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
+        .slide-indicators { flex: 1; display: flex; justify-content: center; gap: 6px; }
+        .indicator { flex-shrink: 0; width: 8px; height: 8px; border-radius: 50%; cursor: pointer;
+            background: color-mix(in srgb, var(--muted) 45%, transparent);
+            transition: background var(--dur) var(--ease-out),
+                transform var(--dur) var(--ease-out); }
+        .indicator.active { background: var(--primary); transform: scale(1.2); }
+        .nav-button { display: grid; place-items: center; width: 44px; height: 44px;
+            padding: 0; font-size: 18px; }
+        #tema { margin: 0; }
 
         /* Moeda, clima e feriados: preenchidos pelo script a partir de data-moeda,
            data-pais, data-regiao e data-dia */
-        .slide[data-moeda] h2 { display: flex; align-items: center; gap: 8px; }
-        .selo-moeda { margin-left: auto; display: inline-flex; align-items: baseline; gap: 6px;
-            padding: 3px 9px; border-radius: 6px; background: var(--sunken); color: var(--ink);
-            border: 1px solid var(--line); font: 500 13px var(--font-mono); white-space: nowrap; }
+        .slide[data-moeda] h2 { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+        .selo-moeda { --c: var(--accent); margin-left: auto; align-items: baseline;
+            font: 500 13px var(--mono); }
         .selo-moeda small { color: var(--muted); font-size: 11px; }
         .date-pill[data-dia] { justify-content: space-between; gap: 8px; }
         .date-pill[data-dia] > span:first-child { white-space: nowrap; }
-        .clima-dia { font: 500 12px var(--font-mono); text-align: right; }
+        .clima-dia { font: 500 12px var(--mono); text-align: right; }
         .clima-dia small { color: var(--muted); font-size: 11px; white-space: nowrap; }
-        .date-pill.feriado { background: var(--warn-soft); color: var(--warn); }
-        .feriado-nome { font-size: 12px; color: var(--warn); margin: 0 0 4px 4px; }
+        .date-pill.feriado { --c: var(--warn); }
+        .feriado-nome { margin: 0 0 4px 4px; font-size: 12px;
+            color: color-mix(in srgb, var(--warn), var(--tint-to) var(--tint-amt)); }
     </style>
 </head>
 <body>
-
-<!-- Botões de controle -->
-<div class="control-buttons">
-    <button class="control-btn" id="themeToggle" onclick="toggleTheme()" title="Alternar tema">
-        <span id="themeIcon"></span>
-    </button>
-</div>
 
 <!-- Container para slides -->
 <div class="slides-container" id="slidesContainer">
 
 <!-- Slide 0: Informações de Viagem -->
 <section class="slide">
-    <div class="content">
+    <div class="content card">
         <h2 class="title-emoji">
             <span class="emoji">🇪🇺</span>
             <span>Europa 2026</span>
@@ -980,36 +296,36 @@
                     <tr>
                         <td>Ibis Brussels Centre Gare du Midi</td>
                         <td>Check-in</td>
-                        <td style="text-align: right;">198,00€</td>
+                        <td>198,00€</td>
                     </tr>
                     <tr>
                         <td>Diplomat Hotel Prague</td>
                         <td>07/02</td>
-                        <td style="text-align: right;">125,00€</td>
+                        <td>125,00€</td>
                     </tr>
                     <tr>
                         <td>Hampton By Hilton Vienna City West</td>
                         <td>03/02</td>
-                        <td style="text-align: right;">231,76€</td>
+                        <td>231,76€</td>
                     </tr>
                     <tr>
                         <td>Ibis Budapest City</td>
                         <td>14/02</td>
-                        <td style="text-align: right;">202,17€</td>
+                        <td>202,17€</td>
                     </tr>
                     <tr>
                         <td>Holiday Inn Express Amsterdam Arena</td>
                         <td>Check-in</td>
-                        <td style="text-align: right;">235,65€</td>
+                        <td>235,65€</td>
                     </tr>
                     <tr>
                         <td>Holiday Inn Hotel Brussels Airport</td>
                         <td>Check-in</td>
-                        <td style="text-align: right;">93,79€</td>
+                        <td>93,79€</td>
                     </tr>
-                    <tr style="border-top: 2px solid #6c757d; font-weight: 600;">
+                    <tr>
                         <td colspan="2">TOTAL</td>
-                        <td style="text-align: right;">1.086,37€</td>
+                        <td>1.086,37€</td>
                     </tr>
                 </tbody>
             </table>
@@ -1019,14 +335,14 @@
 
 <!-- Slide 1: Madrid -->
 <section class="slide" data-moeda="EUR" data-pais="ES">
-    <div class="content">
+    <div class="content card">
         <h2>Madrid <span class="flag">🇪🇸</span></h2>
         <div class="date-pill" data-dia="2026-11-10"><span>TER 10</span></div>
         <div class="scroll-list">
             <ul>
                 <li class="time-item">
                     <span>Chegada</span>
-                    <span class="time-badge-minimal-hover">06:15</span>
+                    <span class="badge time-badge-minimal-hover">06:15</span>
                 </li>
                 <li>Tour Santiago Bernabeu</li>
                 <li>Avenida Gran Vía</li>
@@ -1035,29 +351,30 @@
                 <li>Almoço Mercado de San Miguel</li>
                 <li class="time-item departure">
                     <span>Partida</span>
-                    <span class="time-badge-minimal-hover departure">16:35</span>
+                    <span class="badge time-badge-minimal-hover departure">16:35</span>
                 </li>
             </ul>
         </div>
         <div class="bonus-section">
             <div class="bonus-title">&#10133; Opções extras</div>
-            <div class="bonus-items"><span class="bonus-tag">Parque de El Retiro</span></div>
+            <div class="badges"><span class="badge bonus-tag">Parque de El Retiro</span></div>
         </div>
     </div>
 </section>
 
 <!-- Slide 2: Bruxelas -->
 <section class="slide" data-moeda="EUR" data-pais="BE">
-    <div class="content">
+    <div class="content card">
         <h2>Bruxelas <span class="flag">🇧🇪</span></h2>
         <div class="scroll-list">
             <div class="date-pill" data-dia="2026-11-10"><span>TER 10</span></div>
             <ul class="compact">
                 <li class="time-item">
                     <span>Chegada</span>
-                    <span class="time-badge-minimal-hover">19:00</span>
+                    <span class="badge time-badge-minimal-hover">19:00</span>
                 </li>
-                <li>Jantar no La Terrasse de Bruxelles <span class="time-badge-icon schedule">21:30</span></li>
+                <li>Jantar no La Terrasse de Bruxelles
+                    <span class="badge time-badge-icon schedule">21:30</span></li>
             </ul>
             <div class="date-pill" data-dia="2026-11-11"><span>QUA 11</span></div>
             <ul class="compact">
@@ -1075,13 +392,13 @@
                 <li>
                     <div class="flex-row">
                         <span>Atomium</span>
-                        <span class="time-badge-icon">10h - 18h</span>
+                        <span class="badge time-badge-icon">10h - 18h</span>
                     </div>
                 </li>
                 <li>
                     <div class="flex-row">
                         <span>Planetário</span>
-                        <span class="time-badge-icon schedule">15:00</span>
+                        <span class="badge time-badge-icon schedule">15:00</span>
                     </div>
                 </li>
             </ul>
@@ -1089,45 +406,45 @@
             <ul class="compact">
                 <li class="time-item departure">
                     <span>Partida</span>
-                    <span class="time-badge-minimal-hover departure">09:25</span>
+                    <span class="badge time-badge-minimal-hover departure">09:25</span>
                 </li>
             </ul>
         </div>
         <div class="bonus-section">
             <div class="bonus-title">&#10133; Opções extras</div>
-            <div class="bonus-items"><span class="bonus-tag">Museu Auto World</span></div>
+            <div class="badges"><span class="badge bonus-tag">Museu Auto World</span></div>
         </div>
     </div>
 </section>
 
 <!-- Slide 3: Praga -->
 <section class="slide" data-moeda="CZK" data-pais="CZ">
-    <div class="content">
+    <div class="content card">
         <h2>Praga <span class="flag">🇨🇿</span></h2>
         <div class="scroll-list">
             <div class="date-pill" data-dia="2026-11-12"><span>QUI 12</span></div>
             <ul>
                 <li class="time-item">
                     <span>Chegada</span>
-                    <span class="time-badge-minimal-hover">10:50</span>
+                    <span class="badge time-badge-minimal-hover">10:50</span>
                 </li>
                 <li>
                     <div class="flex-row">
                         <span>Walking tour Old Town</span>
-                        <span class="time-badge-icon">10h - 19h</span>
+                        <span class="badge time-badge-icon">10h - 19h</span>
                     </div>
                 </li>
                 <li>Charles Bridge</li>
                 <li>
                     <div class="flex-row">
                         <span>Pilsner Urquell Beer Experience</span>
-                        <span class="time-badge-icon">11h - 19h</span>
+                        <span class="badge time-badge-icon">11h - 19h</span>
                     </div>
                 </li>
                 <li>
                     <div class="flex-row">
                         <span>Sightseeing Cruise</span>
-                        <span class="time-badge-icon">10h - 21h</span>
+                        <span class="badge time-badge-icon">10h - 21h</span>
                     </div>
                 </li>
             </ul>
@@ -1136,20 +453,20 @@
                 <li>
                     <div class="flex-row">
                         <span>Feira Havelské tržiště</span>
-                        <span class="time-badge-icon">07h - 19h</span>
+                        <span class="badge time-badge-icon">07h - 19h</span>
                     </div>
                 </li>
                 <li>Andar na cidade velha</li>
                 <li>
                     <div class="flex-row">
                         <span>Medieval Underground Walking Tour</span>
-                        <span class="time-badge-icon">10h - 19h</span>
+                        <span class="badge time-badge-icon">10h - 19h</span>
                     </div>
                 </li>
                 <li>
                     <div class="flex-row">
                         <span>Walking tour Prague Castle District</span>
-                        <span class="time-badge-icon">10h - 19h</span>
+                        <span class="badge time-badge-icon">10h - 19h</span>
                     </div>
                 </li>
                 <li>Torre Petřín</li>
@@ -1166,18 +483,18 @@
                 <li>Museu Nacional de Praga</li>
                 <li class="time-item departure">
                     <span>Partida</span>
-                    <span class="time-badge-minimal-hover departure">13:01</span>
+                    <span class="badge time-badge-minimal-hover departure">13:01</span>
                 </li>
             </ul>
         </div>
         <div class="bonus-section">
             <div class="bonus-title">&#10133; Opções extras</div>
-            <div class="bonus-items">
-                <span class="bonus-tag">Prague Zoo</span>
-                <span class="bonus-tag">Fashion Arena Prague Outlet</span>
-                <span class="bonus-tag">Dancing House</span>
-                <span class="bonus-tag">Planetárium Praha</span>
-                <span class="bonus-tag">National Technical Museum</span>
+            <div class="badges">
+                <span class="badge bonus-tag">Prague Zoo</span>
+                <span class="badge bonus-tag">Fashion Arena Prague Outlet</span>
+                <span class="badge bonus-tag">Dancing House</span>
+                <span class="badge bonus-tag">Planetárium Praha</span>
+                <span class="badge bonus-tag">National Technical Museum</span>
             </div>
         </div>
     </div>
@@ -1185,16 +502,17 @@
 
 <!-- Slide 4: Viena -->
 <section class="slide" data-moeda="EUR" data-pais="AT" data-regiao="AT-9">
-    <div class="content">
+    <div class="content card">
         <h2>Viena <span class="flag">🇦🇹</span></h2>
         <div class="scroll-list">
             <div class="date-pill" data-dia="2026-11-14"><span>SAB 14</span></div>
             <ul>
                 <li class="time-item">
                     <span>Chegada</span>
-                    <span class="time-badge-minimal-hover">17:21</span>
+                    <span class="badge time-badge-minimal-hover">17:21</span>
                 </li>
-                <li>Jantar no Kebap Art <span class="time-badge-icon schedule">20:30</span></li>
+                <li>Jantar no Kebap Art
+                    <span class="badge time-badge-icon schedule">20:30</span></li>
             </ul>
             <div class="date-pill" data-dia="2026-11-15"><span>DOM 15</span></div>
             <ul>
@@ -1208,33 +526,33 @@
                 <li>Rathauspark</li>
                 <li>Museu Ciência e Tecnologia</li>
                 <li>Palacio Schönbrunn</li>
-                <li>City tour <span class="time-badge-icon schedule">11h</span></li>
+                <li>City tour <span class="badge time-badge-icon schedule">11h</span></li>
             </ul>
             <div class="date-pill" data-dia="2026-11-16"><span>SEG 16</span></div>
             <ul>
                 <li class="time-item">
                     <span>Ida</span>
-                    <span class="time-badge-inline">07:24</span>
+                    <span class="badge time-badge-inline">07:24</span>
                 </li>
                 <li>Stuhleck </li>
                 <li class="time-item departure">
                     <span>Volta</span>
-                    <span class="time-badge-inline departure">18:42</span>
+                    <span class="badge time-badge-inline departure">18:42</span>
                 </li>
             </ul>
             <div class="date-pill" data-dia="2026-11-17"><span>TER 17</span></div>
             <ul>
                 <li class="time-item departure">
                     <span>Partida</span>
-                    <span class="time-badge-minimal-hover departure">07:45</span>
+                    <span class="badge time-badge-minimal-hover departure">07:45</span>
                 </li>
             </ul>
         </div>
         <div class="bonus-section">
             <div class="bonus-title">&#10133; Opções extras</div>
-            <div class="bonus-items">
-                <span class="bonus-tag">Westfield Shopping City Süd</span>
-                <span class="bonus-tag">Donauturm</span>
+            <div class="badges">
+                <span class="badge bonus-tag">Westfield Shopping City Süd</span>
+                <span class="badge bonus-tag">Donauturm</span>
             </div>
         </div>
     </div>
@@ -1242,66 +560,70 @@
 
 <!-- Slide 5: Bratislava -->
 <section class="slide" data-moeda="EUR" data-pais="SK">
-    <div class="content">
+    <div class="content card">
         <h2>Bratislava <span class="flag">🇸🇰</span></h2>
         <div class="date-pill" data-dia="2026-11-17"><span>TER 17</span></div>
         <div class="scroll-list">
             <ul>
                 <li class="time-item">
                     <span>Chegada</span>
-                    <span class="time-badge-minimal-hover">08:44</span>
+                    <span class="badge time-badge-minimal-hover">08:44</span>
                 </li>
                 <li>
                     <div class="flex-row">
                         <span>Bratislava Castle</span>
-                        <span class="time-badge-icon">08h - 22h</span>
+                        <span class="badge time-badge-icon">08h - 22h</span>
                     </div>
                 </li>
                 <li>
                     <div class="flex-row">
                         <span>UFO observation tower</span>
-                        <span class="time-badge-icon">10h - 23h</span>
+                        <span class="badge time-badge-icon">10h - 23h</span>
                     </div>
                 </li>
-                <li>City tour <span class="time-badge-icon schedule">14h</span></li>
+                <li>City tour <span class="badge time-badge-icon schedule">14h</span></li>
                 <li class="time-item departure">
                     <span>Partida</span>
-                    <span class="time-badge-minimal-hover departure">16:05</span>
+                    <span class="badge time-badge-minimal-hover departure">16:05</span>
                 </li>
             </ul>
         </div>
         <div class="bonus-section">
             <div class="bonus-title">&#10133; Opções extras</div>
-            <div class="bonus-items"><span class="bonus-tag">Eurovea Galleria</span><span class="bonus-tag">Slavín</span></div>
+            <div class="badges">
+                <span class="badge bonus-tag">Eurovea Galleria</span>
+                <span class="badge bonus-tag">Slavín</span>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- Slide 6: Budapeste -->
 <section class="slide" data-moeda="HUF" data-pais="HU">
-    <div class="content">
+    <div class="content card">
         <h2>Budapeste <span class="flag">🇭🇺</span></h2>
         <div class="scroll-list">
             <div class="date-pill" data-dia="2026-11-17"><span>TER 17</span></div>
             <ul>
                 <li class="time-item">
                     <span>Chegada</span>
-                    <span class="time-badge-minimal-hover">18:28</span>
+                    <span class="badge time-badge-minimal-hover">18:28</span>
                 </li>
             </ul>
             <div class="date-pill" data-dia="2026-11-18"><span>QUA 18</span></div>
             <ul>
-                <li>Walking tour of Buda <span class="time-badge-icon schedule">14h</span></li>
+                <li>Walking tour of Buda
+                    <span class="badge time-badge-icon schedule">14h</span></li>
                 <li class="sub-item">
                     <div class="flex-row">
                         <span>Buda Castle</span>
-                        <span class="time-badge-icon">10:00 - 18:00</span>
+                        <span class="badge time-badge-icon">10:00 - 18:00</span>
                     </div>
                 </li>
                 <li class="sub-item">
                     <div class="flex-row">
                         <span>Matthias Church</span>
-                        <span class="time-badge-icon">09:00 - 17:00</span>
+                        <span class="badge time-badge-icon">09:00 - 17:00</span>
                     </div>
                 </li>
                 <li class="sub-item">
@@ -1314,44 +636,47 @@
                         <span>János hill</span>
                     </div>
                 </li>
-                <li class="sub-item">Ida de teleférico <span class="time-badge-icon">10:00 - 16:00</span></li>
-                <li class="sub-item">Volta no trem <span class="time-badge-icon">9:34 - 15:34</span></li>
+                <li class="sub-item">Ida de teleférico
+                    <span class="badge time-badge-icon">10:00 - 16:00</span></li>
+                <li class="sub-item">Volta no trem
+                    <span class="badge time-badge-icon">9:34 - 15:34</span></li>
                 <li>
                     <div class="flex-row">
                         <span>Danube River Cruise</span>
-                        <span class="time-badge-icon">11:00 - 21:00</span>
+                        <span class="badge time-badge-icon">11:00 - 21:00</span>
                     </div>
                 </li>
-                <li>Jantar no Szimpla Kert <span class="time-badge-icon">15:00 - 04:00</span></li>
+                <li>Jantar no Szimpla Kert
+                    <span class="badge time-badge-icon">15:00 - 04:00</span></li>
             </ul>
             <div class="date-pill" data-dia="2026-11-19"><span>QUI 19</span></div>
             <ul>
                 <li>
                     <div class="flex-row">
                         <span>Széchenyi Thermal</span>
-                        <span class="time-badge-icon">07:00 - 20:00</span>
+                        <span class="badge time-badge-icon">07:00 - 20:00</span>
                     </div>
                 </li>
                 <li>Városliget Park</li>
                 <li>Heroes Square Memorial</li>
-                <li>Great Market Hall <span class="time-badge-icon">06h - 18h</span></li>
-                <li>Pest Walking tour <span class="time-badge-icon schedule">10h</span></li>
+                <li>Great Market Hall <span class="badge time-badge-icon">06h - 18h</span></li>
+                <li>Pest Walking tour <span class="badge time-badge-icon schedule">10h</span></li>
                 <li>Moon Budapest</li>
             </ul>
             <div class="date-pill" data-dia="2026-11-20"><span>SEX 20</span></div>
             <ul>
                 <li class="time-item departure">
                     <span>Partida</span>
-                    <span class="time-badge-minimal-hover departure">06:20</span>
+                    <span class="badge time-badge-minimal-hover departure">06:20</span>
                 </li>
             </ul>
         </div>
         <div class="bonus-section">
             <div class="bonus-title">&#10133; Opções extras</div>
-            <div class="bonus-items">
-                <span class="bonus-tag">Ponte Szechenyi</span>
-                <span class="bonus-tag">Avenida Andrássy</span>
-                <span class="bonus-tag">Basílica de São Stephen</span>
+            <div class="badges">
+                <span class="badge bonus-tag">Ponte Szechenyi</span>
+                <span class="badge bonus-tag">Avenida Andrássy</span>
+                <span class="badge bonus-tag">Basílica de São Stephen</span>
             </div>
         </div>
     </div>
@@ -1359,26 +684,27 @@
 
 <!-- Slide 7: Amsterdã -->
 <section class="slide" data-moeda="EUR" data-pais="NL">
-    <div class="content">
+    <div class="content card">
         <h2>Amsterdã <span class="flag">🇳🇱</span></h2>
         <div class="scroll-list">
             <div class="date-pill" data-dia="2026-11-20"><span>SEX 20</span></div>
             <ul>
                 <li class="time-item">
                     <span>Chegada</span>
-                    <span class="time-badge-minimal-hover">13:00</span>
+                    <span class="badge time-badge-minimal-hover">13:00</span>
                 </li>
-                <li>Almoço no Onze Zaak <span class="time-badge-icon schedule">14:30</span></li>
+                <li>Almoço no Onze Zaak
+                    <span class="badge time-badge-icon schedule">14:30</span></li>
                 <li>
                     <div class="flex-row">
                         <span>Passeio de barco no canal</span>
-                        <span class="time-badge-icon">09h - 21h</span>
+                        <span class="badge time-badge-icon">09h - 21h</span>
                     </div>
                 </li>
                 <li>
                     <div class="flex-row">
                         <span>Heineken experience</span>
-                        <span class="time-badge-icon">10:30 - 18:45</span>
+                        <span class="badge time-badge-icon">10:30 - 18:45</span>
                     </div>
                 </li>
             </ul>
@@ -1387,31 +713,31 @@
                 <li>
                     <div class="flex-row">
                         <span>Museu Rijksmuseum</span>
-                        <span class="time-badge-icon">09h - 17h</span>
+                        <span class="badge time-badge-icon">09h - 17h</span>
                     </div>
                 </li>
                 <li>
                     <div class="flex-row">
                         <span>Albert Cuyp Markt</span>
-                        <span class="time-badge-icon">09:30 - 17h</span>
+                        <span class="badge time-badge-icon">09:30 - 17h</span>
                     </div>
                 </li>
                 <li>
                     <div class="flex-row">
                         <span>This is Holland</span>
-                        <span class="time-badge-icon">10h - 17h</span>
+                        <span class="badge time-badge-icon">10h - 17h</span>
                     </div>
                 </li>
                 <li>
                     <div class="flex-row">
                         <span>Lookout</span>
-                        <span class="time-badge-icon">11h - 21h</span>
+                        <span class="badge time-badge-icon">11h - 21h</span>
                     </div>
                 </li>
                 <li>
                     <div class="flex-row">
                         <span>Jogo do Ajax</span>
-                        <span class="time-badge-icon schedule">17h</span>
+                        <span class="badge time-badge-icon schedule">17h</span>
                     </div>
                 </li>
             </ul>
@@ -1421,22 +747,22 @@
                 <li>
                     <div class="flex-row">
                         <span>Volta para Bruxelas</span>
-                        <span class="time-badge-icon schedule">15:15</span>
+                        <span class="badge time-badge-icon schedule">15:15</span>
                     </div>
                 </li>
                 <li class="time-item departure">
                     <span>Partida</span>
-                    <span class="time-badge-minimal-hover departure">15:15</span>
+                    <span class="badge time-badge-minimal-hover departure">15:15</span>
                 </li>
             </ul>
         </div>
         <div class="bonus-section">
             <div class="bonus-title">&#10133; Opções extras</div>
-            <div class="bonus-items">
-                <!-- <span class="bonus-tag">Sexmuseum</span> -->
-                <span class="bonus-tag">Bicicleta</span>
-                <span class="bonus-tag">Vondelpark</span>
-                <span class="bonus-tag">Amsterdam in Motion</span>
+            <div class="badges">
+                <!-- <span class="badge bonus-tag">Sexmuseum</span> -->
+                <span class="badge bonus-tag">Bicicleta</span>
+                <span class="badge bonus-tag">Vondelpark</span>
+                <span class="badge bonus-tag">Amsterdam in Motion</span>
             </div>
         </div>
     </div>
@@ -1444,7 +770,7 @@
 
 <!-- Slide 9: Tempo por Cidade -->
 <section class="slide" style="display: none;">
-    <div class="content">
+    <div class="content card">
         <h2 class="title-emoji">
             <span>Tempo por Cidade</span>
         </h2>
@@ -1520,16 +846,21 @@
 
 </div> <!-- Fechamento do slides-container -->
 
-<!-- Botões de navegação -->
-<button class="nav-button prev" onclick="previousSlide()">‹</button>
-<button class="nav-button next" onclick="nextSlide()">›</button>
-
-<!-- Indicadores -->
-<div class="slide-indicators" id="slideIndicators"></div>
+<!-- Rodapé: navegação, indicadores e tema -->
+<nav class="rodape" aria-label="Slides">
+    <button class="btn nav-button prev" type="button" onclick="previousSlide()"
+        aria-label="Slide anterior">‹</button>
+    <div class="slide-indicators" id="slideIndicators"></div>
+    <button class="btn" id="tema" type="button"></button>
+    <button class="btn nav-button next" type="button" onclick="nextSlide()"
+        aria-label="Próximo slide">›</button>
+</nav>
 
 <script>
 let currentSlide = 0;
-const slides = document.querySelectorAll('.slide');
+// Slides escondidos (display: none) não ocupam espaço e não ganham indicador
+const slides = [...document.querySelectorAll('.slide')]
+    .filter((s) => s.style.display !== 'none');
 const totalSlides = slides.length;
 const container = document.getElementById('slidesContainer');
 const indicatorsContainer = document.getElementById('slideIndicators');
@@ -1583,22 +914,6 @@ container.addEventListener('scroll', () => {
         updateIndicators();
     }
 });
-
-// Mesmo tema das outras páginas do site (escuro por padrão, escolha guardada no navegador)
-function themeIconUpdate() {
-    document.getElementById('themeIcon').textContent =
-        document.documentElement.dataset.theme === 'dark' ? '☀' : '☾';
-}
-
-function toggleTheme() {
-    const tema = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-    try { localStorage.setItem('ferramentas.tema', tema); } catch (_) {}
-    document.documentElement.dataset.theme = tema;
-    themeIconUpdate();
-}
-
-themeIconUpdate();
-addEventListener('temachange', themeIconUpdate);
 
 // Moeda, clima e feriados de cada cidade, a partir de data-moeda, data-pais, data-regiao e do
 // data-dia de cada faixa de data. As APIs são gratuitas e sem chave; o que elas devolvem fica
@@ -1759,7 +1074,7 @@ addEventListener('temachange', themeIconUpdate);
             currencyDisplay: 'narrowSymbol', minimumFractionDigits: 0, maximumFractionDigits: 0 });
         const selo = document.createElement('span');
         const data = document.createElement('small');
-        selo.className = 'selo-moeda';
+        selo.className = 'badge selo-moeda';
         selo.textContent = `${local.format(unidade)} = ${reais.format(unidade / porReal)}`;
         data.textContent = ddmm(dados.cambio.data);
         selo.append(data);

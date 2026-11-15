@@ -4,28 +4,24 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Ferramentas</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="assets/glass.css">
   <link rel="stylesheet" href="assets/base.css">
   <script src="assets/theme.js"></script>
   <style>
     .tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 1rem; margin: 0; padding: 0; list-style: none; }
-    .tools a { display: block; height: 100%; color: inherit; text-decoration: none;
-      background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
-      overflow: hidden; transition: border-color .15s, transform .15s; }
-    .tools a:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .tools a { display: block; height: 100%; margin: 0; padding: 0; overflow: hidden;
+      color: inherit; }
+    .tools a:hover { text-decoration: none; }
     .tools .body { padding: .75rem 1rem 1rem; }
-    .tools h2 { font: 600 1.15rem/1.25 var(--font-display); margin: 0; }
+    .tools h2 { margin: 0; }
     .tools p { margin: .2rem 0 0; color: var(--muted); font-size: 14px; }
 
     /* Miniatura: a própria página da ferramenta, carregada a 1280px e reduzida */
     .thumb { position: relative; overflow: hidden; aspect-ratio: 16 / 10;
-      background: var(--sunken); border-bottom: 1px solid var(--line); }
+      background: var(--card); border-bottom: 1px solid var(--line2); }
     .thumb iframe { position: absolute; top: 0; left: 0; width: 1280px; height: 800px;
       border: 0; transform-origin: 0 0; pointer-events: none; }
-    @media (prefers-reduced-motion: reduce) { .tools a { transition: none; } }
   </style>
 </head>
 <body>
@@ -37,13 +33,13 @@
       <a href="ir-etf/">IR ETF</a>
       <a href="roteiro-viagem/">Roteiro</a>
     </nav>
-    <button class="theme-btn" id="tema" type="button"></button>
+    <button class="btn" id="tema" type="button"></button>
   </header>
   <main>
     <h1>Ferramentas</h1>
     <p class="lede">Calculadoras e guias de uso pessoal. Os dados ficam só neste navegador.</p>
     <ul class="tools">
-      <li><a href="financiamento/">
+      <li><a class="card lift" href="financiamento/">
         <div class="thumb"><iframe src="financiamento/" title="Prévia do Financiamento"
           tabindex="-1" loading="lazy"></iframe></div>
         <div class="body">
@@ -51,7 +47,7 @@
           <p>SAC x Price, investir ou amortizar, comparar imóveis.</p>
         </div>
       </a></li>
-      <li><a href="ir-etf/">
+      <li><a class="card lift" href="ir-etf/">
         <div class="thumb"><iframe src="ir-etf/" title="Prévia do IR ETF"
           tabindex="-1" loading="lazy"></iframe></div>
         <div class="body">
@@ -59,7 +55,7 @@
           <p>Imposto de renda na venda de cotas de ETF.</p>
         </div>
       </a></li>
-      <li><a href="roteiro-viagem/">
+      <li><a class="card lift" href="roteiro-viagem/">
         <div class="thumb"><iframe src="roteiro-viagem/" title="Prévia do Roteiro de viagem"
           tabindex="-1" loading="lazy"></iframe></div>
         <div class="body">
